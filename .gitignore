@@ -1,0 +1,10 @@
+*.o
+*.pro.user.*
+*.pro.user
+*.exe
+*.Debug
+*.Release
+*.dll
+Build/
+log/
+build-*
