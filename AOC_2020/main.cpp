@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
     fprintf(stdout, "start day 13\r\n");
     fflush(stdout);
 //    Y20Day13::computSecondResult();
-    Y20Day13::computSecondResultBrain();
+    Y20Day13::computSecondResultBrainBis();
 
 //    QThreadPool threadPool;
 //    threadPool.setMaxThreadCount(10);
