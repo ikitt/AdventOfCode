@@ -16,7 +16,7 @@
 #include "Y20Day11.h"
 #include "Y20Day12.h"
 #include "Y20Day13.h"
-//#include "Y20Day14.h"
+#include "Y20Day14.h"
 //#include "Y20Day15.h"
 //#include "Y20Day16.h"
 //#include "Y20Day17.h"
@@ -135,7 +135,6 @@ int main(int argc, char *argv[])
     fflush(stdout);
     Y20Day12::computFirstResult();
     Y20Day12::computSecondResult();
-*/
 
 
 
@@ -143,8 +142,9 @@ int main(int argc, char *argv[])
     //======
     fprintf(stdout, "start day 13\r\n");
     fflush(stdout);
-//    Y20Day13::computSecondResult();
+    Y20Day13::computSecondResult();
     Y20Day13::computSecondResultBrainBis();
+*/
 
 //    QThreadPool threadPool;
 //    threadPool.setMaxThreadCount(10);
@@ -167,7 +167,6 @@ int main(int argc, char *argv[])
 
 
 //    Y20Day13::computSecondResult(102317032431363, 0);
-    /*
 
 
 
@@ -175,11 +174,14 @@ int main(int argc, char *argv[])
     //======
     fprintf(stdout, "start day 14\r\n");
     fflush(stdout);
-    Y20Day14::computFirstResult();
-    Y20Day14::computSecondResult();
+//    fprintf(stdout, "Resulst for the first part is %llu\r\n", Y20Day14::computFirstResult());
+//    fflush(stdout);
+
+    fprintf(stdout, "Final result is %llu\r\n", Y20Day14::computSecondResult());
+    fflush(stdout);
 
 
-
+    /*
     //DAY 15
     //======
     fprintf(stdout, "start day 15\r\n");
