@@ -19,7 +19,7 @@
 #include "Y20Day14.h"
 #include "Y20Day15.h"
 #include "Y20Day16.h"
-//#include "Y20Day17.h"
+#include "Y20Day17.h"
 //#include "Y20Day18.h"
 //#include "Y20Day19.h"
 //#include "Y20Day20.h"
@@ -144,7 +144,6 @@ int main(int argc, char *argv[])
     fflush(stdout);
     Y20Day13::computSecondResult();
     Y20Day13::computSecondResultBrainBis();
-*/
 
 //    QThreadPool threadPool;
 //    threadPool.setMaxThreadCount(10);
@@ -196,24 +195,29 @@ int main(int argc, char *argv[])
 
     //DAY 16
     //======
-//    fprintf(stdout, "start day 16\r\n");
-//    fflush(stdout);
-//    fprintf(stdout, "Result for first part is %i.\r\n", Y20Day16::computFirstResult());
-//    fflush(stdout);
+    fprintf(stdout, "start day 16\r\n");
+    fflush(stdout);
+    fprintf(stdout, "Result for first part is %i.\r\n", Y20Day16::computFirstResult());
+    fflush(stdout);
     fprintf(stdout, "Result for second part is %llu.\r\n", Y20Day16::computSecondResult());
     fflush(stdout);
 
 
-    /*
+*/
     //DAY 17
     //======
     fprintf(stdout, "start day 17\r\n");
     fflush(stdout);
-    Y20Day17::computFirstResult();
-    Y20Day17::computSecondResult();
+    fprintf(stdout, "Result for first part is %i.\r\n", Y20Day17::computFirstResult());
+    fflush(stdout);
+    fflush(stdout);
+    fprintf(stdout, "Result for second part is %i.\r\n", Y20Day17::computSecondResult());
+    fflush(stdout);
 
 
 
+
+    /*
     //DAY 18
     //======
     fprintf(stdout, "start day 18\r\n");
