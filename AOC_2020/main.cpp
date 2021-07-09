@@ -18,7 +18,7 @@
 #include "Y20Day13.h"
 #include "Y20Day14.h"
 #include "Y20Day15.h"
-//#include "Y20Day16.h"
+#include "Y20Day16.h"
 //#include "Y20Day17.h"
 //#include "Y20Day18.h"
 //#include "Y20Day19.h"
@@ -181,29 +181,30 @@ int main(int argc, char *argv[])
 //    fflush(stdout);
 
 
-    //DAY 15
-    //======
-    fprintf(stdout, "start day 15\r\n");
-    fflush(stdout);
-    int result = Y20Day15::computFirstResult();
-    fprintf(stdout, "Result for first part is %i.\r\n", result);
-    fflush(stdout);
-    unsigned long long int result2 = Y20Day15::computSecondResult();
-    fprintf(stdout, "Result for first part is %llu.\r\n", result2);
-    fflush(stdout);
+//    //DAY 15
+//    //======
+//    fprintf(stdout, "start day 15\r\n");
+//    fflush(stdout);
+//    int result = Y20Day15::computFirstResult();
+//    fprintf(stdout, "Result for first part is %i.\r\n", result);
+//    fflush(stdout);
+//    unsigned long long int result2 = Y20Day15::computSecondResult();
+//    fprintf(stdout, "Result for second part is %llu.\r\n", result2);
+//    fflush(stdout);
 
+
+
+    //DAY 16
+    //======
+//    fprintf(stdout, "start day 16\r\n");
+//    fflush(stdout);
+//    fprintf(stdout, "Result for first part is %i.\r\n", Y20Day16::computFirstResult());
+//    fflush(stdout);
+    fprintf(stdout, "Result for second part is %llu.\r\n", Y20Day16::computSecondResult());
+    fflush(stdout);
 
 
     /*
-    //DAY 16
-    //======
-    fprintf(stdout, "start day 16\r\n");
-    fflush(stdout);
-    Y20Day16::computFirstResult();
-    Y20Day16::computSecondResult();
-
-
-
     //DAY 17
     //======
     fprintf(stdout, "start day 17\r\n");
