@@ -20,7 +20,7 @@
 #include "Y20Day15.h"
 #include "Y20Day16.h"
 #include "Y20Day17.h"
-//#include "Y20Day18.h"
+#include "Y20Day18.h"
 //#include "Y20Day19.h"
 //#include "Y20Day20.h"
 //#include "Y20Day21.h"
@@ -203,7 +203,6 @@ int main(int argc, char *argv[])
     fflush(stdout);
 
 
-*/
     //DAY 17
     //======
     fprintf(stdout, "start day 17\r\n");
@@ -215,18 +214,21 @@ int main(int argc, char *argv[])
     fflush(stdout);
 
 
+*/
 
 
-    /*
     //DAY 18
     //======
     fprintf(stdout, "start day 18\r\n");
     fflush(stdout);
-    Y20Day18::computFirstResult();
-    Y20Day18::computSecondResult();
+//    fprintf(stdout, "Result for first part is %s.\r\n", Y20Day18::computFirstResult().toStdString().c_str());
+//    fflush(stdout);
+    fprintf(stdout, "Result for first part is %s.\r\n", Y20Day18::computSecondResult().toStdString().c_str());
+    fflush(stdout);
 
 
 
+    /*
     //DAY 19
     //======
     fprintf(stdout, "start day 19\r\n");

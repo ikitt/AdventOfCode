@@ -33,6 +33,7 @@ SOURCES += \
         Y20Day15.cpp \
         Y20Day16.cpp \
         Y20Day17.cpp \
+        Y20Day18.cpp \
         main.cpp
 
 # Default rules for deployment.
@@ -57,4 +58,5 @@ HEADERS += \
     Y20Day14.h \
     Y20Day15.h \
     Y20Day16.h \
-    Y20Day17.h
+    Y20Day17.h \
+    Y20Day18.h
