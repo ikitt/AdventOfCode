@@ -9,13 +9,29 @@ Y20Day19::Y20Day19()
 int Y20Day19::computFirstResult()
 {
     readInput();
+    fprintf(stdout, "Input read finished.\r\n"/*, countMsgMatching(0)*/);
+    fflush(stdout);
     computeRules();
+
+    fprintf(stdout, "All the %i rules completed.\r\n", _completedRules.size());
+    fflush(stdout);
+
+    for(int idx : _completedRules.keys())
+    {
+//        fprintf(stdout, "Rule %i give \"%s\".\r\n", idx, _completedRules[idx].toStdString().c_str());
+//        fflush(stdout);
+    }
+
+    fprintf(stdout, "There is %i message matching rule 0.\r\n", countMsgMatching(0));
+    fflush(stdout);
+
     //Read
         //Get rules // crash if two rules with same id
         //Get messages
     //While loop over rules
         //found each occurence of each complete rules found on last turn
         // quit if all rules are complete, crash if no more rules complete this turn and still incomplete rules
+    return 12;
 }
 
 
@@ -35,10 +51,12 @@ void Y20Day19::readInput()
         if(inRules)
         {
             int ruleId = line.split(":")[0].toInt();
-            QStringList rule = line.split(":")[1].simplified().split("|");
+            QString rule = line.split(":")[1].simplified();
+            rule.append(" ");
+            rule.prepend(" ");
 
             if(_baseRules.keys().contains(ruleId))
-                throw ("Multiple definition for rules " + std::to_string(ruleId));
+                throw std::runtime_error("Multiple definition for rules " + std::to_string(ruleId));
             else
                 _baseRules[ruleId] = rule;
         }
@@ -54,6 +72,8 @@ void Y20Day19::computeRules()
 {
     int completedRulesLastTurn = -1;
 
+    int lastPrintCount = 0;
+
     for(int ruleId : _baseRules.keys())
     {
         checkAndAddRule({ruleId, _baseRules[ruleId] });
@@ -63,56 +83,157 @@ void Y20Day19::computeRules()
     {
         for(int ruleId : _baseRules.keys())
         {
+            //Pass already completed rules
             if(_completedRules.keys().contains(ruleId))
                 continue;
 
-            for(int oredIdx = 0; oredIdx < _baseRules[ruleId].size(); oredIdx ++)
-//            for(QString oredRule : _baseRules[ruleId])
+            for(QString atomicRule : _baseRules[ruleId].split(" "))
             {
-                for(QString atomicRule : _baseRules[ruleId][oredIdx].split(" "))
+                bool okConv;
+                if(_completedRules.keys().contains(atomicRule.toInt(&okConv)) && okConv)
                 {
-                    if(_completedRules.keys().contains(atomicRule.toInt()))
-                    {
-                        _baseRules[ruleId][oredIdx].replace(atomicRule, _completedRules)
-                    }
+                    _baseRules[ruleId] = replaceInRules(_baseRules[ruleId], atomicRule.toInt(), _completedRules[atomicRule.toInt()]);
                 }
             }
 
             checkAndAddRule({ruleId, _baseRules[ruleId]});
         }
 
-        if(_completedRules.size() != completedRulesLastTurn)
-            throw "Reach a deadend, no more rules completed.";
+        if(_completedRules.size() == completedRulesLastTurn)
+            throw std::runtime_error("Reach a deadend, no more rules completed.");
+        completedRulesLastTurn = _completedRules.size();
+
+        if((_completedRules.size() - lastPrintCount) > 5)
+        {
+            lastPrintCount = _completedRules.size();
+            fprintf(stdout, "Got %i completed rules.\r\n", lastPrintCount);
+            fflush(stdout);
+        }
+    }
+
+    for(int ruleId : _completedRules.keys())
+    {
+        _completedRules[ruleId] = _completedRules[ruleId].remove(' ');
     }
 }
 
-void Y20Day19::checkAndAddRule(QPair<int, QStringList> ruleToCheck)
-{
-    bool ruleComplete = true;
 
-    for(QString partRule : ruleToCheck.second)
-    {
-        ruleComplete &= !partRule.contains(QRegularExpression("\\d"));
-    }
+void Y20Day19::checkAndAddRule(QPair<int, QString> ruleToCheck)
+{
+    bool ruleComplete = !ruleToCheck.second.contains(QRegularExpression("\\d"));
+
+
+//    fprintf(stdout, "Check rule %s: %s which is", std::to_string(ruleToCheck.first).c_str(), ruleToCheck.second.toStdString().c_str());
+//    fflush(stdout);
 
     if(ruleComplete)
+    {
+//        QString rule = ruleToCheck.second.remove(' ').replace('|', ' ');
+//        _completedRules[ruleToCheck.first] = rule;
         _completedRules[ruleToCheck.first] = ruleToCheck.second;
+
+
+//        fprintf(stdout, " complete.\r\n");
+//        fflush(stdout);
+    }
+    else
+    {
+
+//        fprintf(stdout, " incomplete.\r\n");
+//        fflush(stdout);
+    }
 }
 
 
-QMap<int /*rules id*/, QStringList /*equivalent*/> Y20Day19::_baseRules = {};
-QMap<int /*rules id*/, QStringList /*equivalent*/> Y20Day19::_completedRules = {};
-QStringList _msg = {};
+QString Y20Day19::replaceInRules(QString ruleToModif, int ruleId, QString ruleToInsert)
+{
+    QStringList splitted = ruleToModif.split('|');
 
-// /* Test
+//    fprintf(stdout, "Insert %s in %s.\r\n", ruleToInsert.toStdString().c_str(), ruleToModif.toStdString().c_str());
+//    fflush(stdout);
+
+    for(int idx = 0 ; idx < splitted.size() ; idx ++)
+    {
+//        bool okConv;
+        QString stringId = " " + QString::number(ruleId) + " ";
+        if(splitted[idx].contains(stringId))
+        {
+            for(QString ored : ruleToInsert.split('|'))
+            {
+                QString base = splitted[idx];
+                base.replace(stringId, ored);
+                splitted.insert(idx + 1, base);
+            }
+            splitted.removeAt(idx);
+        }
+    }
+
+//    fprintf(stdout, "Which return %s.\r\n", splitted.join('|').toStdString().c_str());
+//    fflush(stdout);
+
+    return splitted.join('|');
+}
+
+
+int Y20Day19::countMsgMatching(int ruleId)
+{
+
+    fprintf(stdout, "There is %i atomic rule in rule %i.\r\n", _completedRules[ruleId].split('|').size(), ruleId);
+    fflush(stdout);
+
+    QMap<int /*size*/, QString /*rule by size*/> ruleBySize = {};
+    for(QString atomicRule : _completedRules[ruleId].split('|'))
+    {
+        if(ruleBySize.keys().contains(atomicRule.size()))
+        {
+            ruleBySize[atomicRule.size()] += "|" + atomicRule;
+        }
+        else
+        {
+            ruleBySize[atomicRule.size()] = atomicRule;
+        }
+    }
+
+    for(int idx : ruleBySize.keys())
+    {
+        fprintf(stdout, "Find %i rules of size %i.\r\n",ruleBySize[idx].split('|').size(), idx);
+        fflush(stdout);
+    }
+
+    int matcheCount = 0;
+    for(QString msg : _msg)
+    {
+        if(!ruleBySize.keys().contains(msg.size()))
+        {
+            continue;
+        }
+
+        for(QString atomicRule : ruleBySize[msg.size()].split('|'))
+        {
+            if(atomicRule == msg)
+            {
+                matcheCount++;
+                break;
+            }
+        }
+    }
+    return matcheCount;
+}
+
+
+QMap<int /*rules id*/, QString /*equivalent*/> Y20Day19::_baseRules = {};
+QMap<int /*rules id*/, QString /*equivalent*/> Y20Day19::_completedRules = {};
+QStringList Y20Day19::_msg = {};
+
+ /* Test
 const QVector<QString> Y20Day19::_input =
 {
 "0: 4 1 5    ",        // => aaaabb, aaabab, abbabb, abbbab, aabaab, aabbbb, abaaab, or ababbb
 "1: 2 3 | 3 2",        // => aaab, aaba, bbab, bbba, abaa, abbb, baaa, or babb
 "2: 4 4 | 5 5",        // => aa or bb
 "3: 4 5 | 5 4",        // => ab or ba
-"4: a      ",      // => a
-"5: b      ",      // => b
+"4: a        ",      // => a
+"5: b        ",      // => b
 "            ",
 "ababbb      ",        // => OK
 "bababa      ",        // => KO
@@ -123,7 +244,7 @@ const QVector<QString> Y20Day19::_input =
 // */
 
 
- /*
+// /*
 const QVector<QString> Y20Day19::_input =
 {
 "58: 127 99 | 105 36                                                                                                                                                   ",

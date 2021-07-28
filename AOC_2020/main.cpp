@@ -21,7 +21,7 @@
 #include "Y20Day16.h"
 #include "Y20Day17.h"
 #include "Y20Day18.h"
-//#include "Y20Day19.h"
+#include "Y20Day19.h"
 //#include "Y20Day20.h"
 //#include "Y20Day21.h"
 //#include "Y20Day22.h"
@@ -214,7 +214,6 @@ int main(int argc, char *argv[])
     fflush(stdout);
 
 
-*/
 
 
     //DAY 18
@@ -226,17 +225,18 @@ int main(int argc, char *argv[])
     fprintf(stdout, "Result for first part is %s.\r\n", Y20Day18::computSecondResult().toStdString().c_str());
     fflush(stdout);
 
+*/
 
 
-    /*
     //DAY 19
     //======
     fprintf(stdout, "start day 19\r\n");
     fflush(stdout);
     Y20Day19::computFirstResult();
-    Y20Day19::computSecondResult();
+//    Y20Day19::computSecondResult();
 
 
+    /*
 
     //DAY 20
     //======
