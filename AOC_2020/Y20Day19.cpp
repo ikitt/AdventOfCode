@@ -9,7 +9,7 @@ Y20Day19::Y20Day19()
 int Y20Day19::computFirstResult()
 {
     readInput();
-    fprintf(stdout, "Input read finished.\r\n"/*, countMsgMatching(0)*/);
+    fprintf(stdout, "Input read finished.\r\n");
     fflush(stdout);
     computeRules();
 
@@ -62,7 +62,8 @@ void Y20Day19::readInput()
         }
         else
         {
-            _msg << line;
+            _msg << line.simplified();
+            _maxMsgSize = std::max(_maxMsgSize, line.simplified().size());
         }
     }
 }
@@ -177,46 +178,157 @@ QString Y20Day19::replaceInRules(QString ruleToModif, int ruleId, QString ruleTo
 
 int Y20Day19::countMsgMatching(int ruleId)
 {
+    int multipleDefinition = 0;
+    int emptyDefinition = 0;
+    int lastIdx = 0;
+    int cpt = 0;
 
     fprintf(stdout, "There is %i atomic rule in rule %i.\r\n", _completedRules[ruleId].split('|').size(), ruleId);
     fflush(stdout);
 
-    QMap<int /*size*/, QString /*rule by size*/> ruleBySize = {};
-    for(QString atomicRule : _completedRules[ruleId].split('|'))
+    QMap<int /*size*/, QVector<QString> /*rule by size*/> ruleBySize = {};
+    QStringList eachRule = _completedRules[ruleId].remove(' ').split('|');
+    for(QString atomicRule : eachRule)
     {
         if(ruleBySize.keys().contains(atomicRule.size()))
         {
-            ruleBySize[atomicRule.size()] += "|" + atomicRule;
+            ruleBySize[atomicRule.size()][++lastIdx] = atomicRule;
         }
         else
         {
-            ruleBySize[atomicRule.size()] = atomicRule;
+            ruleBySize[atomicRule.size()] = QVector<QString>(eachRule.size());
+            ruleBySize[atomicRule.size()][0] = atomicRule;
+        }
+
+        cpt++;
+        if(cpt%100000 == 0)
+        {
+            fprintf(stdout, "Parse %i atomic rule.\r\n",cpt);
+            fflush(stdout);
         }
     }
 
+    cpt = 0;
+    for(int idxG : ruleBySize.keys())
+    {
+        fprintf(stdout, "Start sorting.\r\n");
+        fflush(stdout);
+        std::sort(ruleBySize[idxG].begin(), ruleBySize[idxG].end());
+        fprintf(stdout, "End sorting.\r\n");
+        fflush(stdout);
+        for(int idx = 0 ; idx < (ruleBySize[idxG].size() - 1) ; idx++)
+        {
+            if(ruleBySize[idxG][idx].isEmpty())
+            {
+                emptyDefinition++;
+                ruleBySize[idxG].remove(idx);
+                idx--;
+            }
+            else if(ruleBySize[idxG][idx] == ruleBySize[idxG][idx+1])
+            {
+                ruleBySize[idxG].remove(idx+1);
+                multipleDefinition++;
+                idx--;
+            }
+            cpt++;
+            if(cpt%100000 == 0)
+            {
+                fprintf(stdout, "Filter %i atomic rule.\r\n",cpt);
+                fflush(stdout);
+            }
+        }
+    }
+
+    fprintf(stdout, "Find %i multiple definition.\r\n",multipleDefinition);
+    fflush(stdout);
+
     for(int idx : ruleBySize.keys())
     {
-        fprintf(stdout, "Find %i rules of size %i.\r\n",ruleBySize[idx].split('|').size(), idx);
+        fprintf(stdout, "Find %i rules of size %i.\r\n",ruleBySize[idx].size(), idx);
         fflush(stdout);
     }
 
-    int matcheCount = 0;
-    for(QString msg : _msg)
+    QMap<int, QVector<int>> idxOfFirstB; //Position of first B by size by idx
+    for(int sizeIdx : ruleBySize.keys())
     {
+        idxOfFirstB[sizeIdx] = QVector<int>(sizeIdx);
+    }
+    for(int sizeIdx : ruleBySize.keys())
+    {
+        for(int idx = 0 ; idx <= sizeIdx ; idx++)
+        {
+            for(int ruleIdx = 0 ; ruleIdx < ruleBySize[sizeIdx].size() ; ruleIdx++)
+            {
+                if(ruleBySize[sizeIdx][ruleIdx][idx] == "b")
+                {
+                    idxOfFirstB[sizeIdx][idx] = ruleIdx;
+                    break;
+                }
+            }
+        }
+    }
+
+
+    fprintf(stdout, "Finish getting first b.\r\n");
+    fflush(stdout);
+
+
+
+    int matcheCount = 0;
+    /*QMap<int,int>*/ int ruleMatchingIdx = {};
+    int lastSize = 0;
+
+    fprintf(stdout, "Start sorting _msg.\r\n");
+    fflush(stdout);
+    std::sort(_msg.begin(),_msg.end());
+    fprintf(stdout, "End sorting _msg.\r\n");
+    fflush(stdout);
+
+    for(int msgIdx = 0 ; msgIdx < _msg.size() ; msgIdx++)
+    {
+        QString msg = _msg[msgIdx];
+        if(lastSize != msg.size())
+        {
+            lastSize = msg.size();
+            ruleMatchingIdx = 0;
+        }
         if(!ruleBySize.keys().contains(msg.size()))
         {
             continue;
         }
 
-        for(QString atomicRule : ruleBySize[msg.size()].split('|'))
+//        int msgFirstB = msg.indexOf('b');
+        for(int idx = ruleMatchingIdx ; idx < ruleBySize[msg.size()].size() ; idx++)
         {
+            QString atomicRule = ruleBySize[msg.size()][idx];
             if(atomicRule == msg)
             {
                 matcheCount++;
+                ruleMatchingIdx = idx;
                 break;
             }
         }
     }
+
+//    int matcheCount = 0;
+//    for(QString msg : _msg)
+//    {
+//        if(!ruleBySize.keys().contains(msg.size()))
+//        {
+//            continue;
+//        }
+
+//        int msgFirstB = msg.indexOf('b');
+//        for(int idx = idxOfFirstB[msg.size()][msgFirstB] ; idx < ruleBySize[msg.size()].size() ; idx++)
+//        {
+//            QString atomicRule = ruleBySize[msg.size()][idx];
+//            if(atomicRule == msg)
+//            {
+//                matcheCount++;
+//                break;
+//            }
+//        }
+//    }
     return matcheCount;
 }
 

@@ -21,6 +21,7 @@ private:
     static QMap<int /*rules id*/, QString /*equivalent*/> _baseRules;
     static QMap<int /*rules id*/, QString /*equivalent*/> _completedRules;
     static QStringList _msg;
+    static int _maxMsgSize;
 
     static void readInput();
     static void computeRules();
