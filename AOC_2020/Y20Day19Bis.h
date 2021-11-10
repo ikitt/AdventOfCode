@@ -1,5 +1,5 @@
-#ifndef Y20DAY19_H
-#define Y20DAY19_H
+#ifndef Y20DAY19BIS_H
+#define Y20DAY19BIS_H
 
 #include <QVector>
 #include <QString>
@@ -7,10 +7,12 @@
 #include <QMap>
 #include <QRegularExpression>
 
-class Y20Day19
+#include <bitset>
+
+class Y20Day19Bis
 {
 public:
-    Y20Day19();
+    Y20Day19Bis();
 
     static int computFirstResult();
     static int computSecondResult();
@@ -18,6 +20,9 @@ public:
 
 private:
     static const QVector<QString> _input;
+
+//    std::list<std::bitset> copain;
+
     static QMap<int /*rules id*/, QString /*equivalent*/> _baseRules;
     static QMap<int /*rules id*/, QString /*equivalent*/> _completedRules;
     static QStringList _msg;
@@ -40,4 +45,4 @@ private:
     static int countMsgMatching2(int ruleId);
 };
 
-#endif // Y20DAY19_H
+#endif // Y20DAY19BIS_H

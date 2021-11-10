@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        TmpAngellCount.cpp \
         Y20Day02.cpp \
         Y20Day03.cpp \
         Y20Day04.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
         Y20Day17.cpp \
         Y20Day18.cpp \
         Y20Day19.cpp \
+        Y20Day19Bis.cpp \
         main.cpp
 
 # Default rules for deployment.
@@ -43,6 +45,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    TmpAngellCount.h \
     Y20Day02.h \
     Y20Day03.h \
     Y20Day04.h \
@@ -61,4 +64,5 @@ HEADERS += \
     Y20Day16.h \
     Y20Day17.h \
     Y20Day18.h \
-    Y20Day19.h
+    Y20Day19.h \
+    Y20Day19Bis.h

@@ -29,6 +29,9 @@
 //#include "Y20Day24.h"
 //#include "Y20Day25.h"
 
+
+#include "TmpAngellCount.h" //TRVD
+
 int main(int argc, char *argv[])
 {
     fprintf(stdout, "start main \r\n");
@@ -228,13 +231,16 @@ int main(int argc, char *argv[])
 */
 
 
-    //DAY 19
-    //======
-    fprintf(stdout, "start day 19\r\n");
-    fflush(stdout);
-    Y20Day19::computFirstResult();
+//    //DAY 19
+//    //======
+//    fprintf(stdout, "start day 19\r\n");
+//    fflush(stdout);
+////    Y20Day19::computFirstResult();
 //    Y20Day19::computSecondResult();
 
+    //tmp vallec
+    TmpAngellCount::listMacInLinkFile();
+    TmpAngellCount::countMacInLinkFiles();
 
     /*
 
