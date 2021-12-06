@@ -14,7 +14,7 @@ public:
     static void computSecondResult();
 
 private:
-    static const QVector<QString> _input;
+    static const QVector<int> _input;
 };
 
 #endif // Y21DAY01_H
