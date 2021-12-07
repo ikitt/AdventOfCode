@@ -6,6 +6,8 @@
 #include "Y21Day03.h"
 #include "Y21Day04.h"
 #include "Y21Day05.h"
+#include "Y21Day06.h"
+#include "Y21Day07.h"
 
 int main(int argc, char *argv[])
 {
@@ -33,21 +35,31 @@ int main(int argc, char *argv[])
     Y21Day03::computFirstResult();
     Y21Day03::computSecondResult();
 
-//    */
 
     //DAY 4
     //=====
-//    Y21Day04::computFirstResult();
+    Y21Day04::computFirstResult();
     Y21Day04::computSecondResult();
 
-        /*
 
     //DAY 5
     //=====
     Y21Day05::computFirstResult();
     Y21Day05::computSecondResult();
 
+
+    //DAY 6
+    //=====
+    Y21Day06::computFirstResult();
+    Y21Day06::computSecondResult();
+
 //    */
+
+    //DAY 7
+    //=====
+    Y21Day07::computFirstResult();
+    Y21Day07::computSecondResult();
+
 
     return a.exec();
 }

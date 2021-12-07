@@ -25,5 +25,9 @@ add_executable(AOC_2021
   Y21Day04.h
   Y21Day05.cpp
   Y21Day05.h
+  Y21Day06.cpp
+  Y21Day06.h
+  Y21Day07.cpp
+  Y21Day07.h
 )
 target_link_libraries(AOC_2021 Qt5::Core)

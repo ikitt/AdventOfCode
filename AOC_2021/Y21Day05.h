@@ -36,8 +36,8 @@ private:
     static const QVector<QString> _input;
 
     static void fileLines();
-    static void makeMap();
-    static QVector<Point> getPointList(const Line & line);
+    static void makeMap(bool withDiag  = false);
+    static QVector<Point> getPointList(const Line & line, bool withDiag = false);
     static void printMap();
 
 };

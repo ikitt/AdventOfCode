@@ -18,7 +18,7 @@ void Y21Day05::computFirstResult()
     fprintf(stdout, "end compute line with %i lines\r\n", _lines.size());
     fflush(stdout);
 
-    makeMap();
+    makeMap(false);
 
 //    printMap();
 
@@ -29,8 +29,19 @@ void Y21Day05::computFirstResult()
 
 void Y21Day05::computSecondResult()
 {
+    fprintf(stdout, "start compute line\r\n");
+    fflush(stdout);
 
-    fprintf(stdout, "");
+    fileLines();
+
+    fprintf(stdout, "end compute line with %i lines\r\n", _lines.size());
+    fflush(stdout);
+
+    makeMap(true);
+
+//    printMap();
+
+    fprintf(stdout, "Got %i two plus point\r\n", _twoPlusCounter);
     fflush(stdout);
 }
 
@@ -57,7 +68,7 @@ void Y21Day05::fileLines()
 }
 
 
-void Y21Day05::makeMap()
+void Y21Day05::makeMap(bool withDiag)
 {
     _map = QVector<QVector<int>>(_max_x + 1, QVector<int>(_max_y + 1,0)); //int map at right size with 0
 
@@ -69,7 +80,7 @@ void Y21Day05::makeMap()
 //    int linecpt = 0;
     for(Line line : _lines)
     {
-        QVector<Point> ventPoint = getPointList(line);
+        QVector<Point> ventPoint = getPointList(line, withDiag);
 
         for(Point point : ventPoint)
         {
@@ -90,7 +101,7 @@ void Y21Day05::makeMap()
 
 
 //With straight Line
-QVector<Point> Y21Day05::getPointList(const Line & line)
+QVector<Point> Y21Day05::getPointList(const Line & line, bool withDiag)
 {
     QVector<Point> res;
     if(line.x1 == line.x2)
@@ -117,7 +128,7 @@ QVector<Point> Y21Day05::getPointList(const Line & line)
             res.push_back(currentPoint);
         }
     }
-    else if(std::abs(line.x1 - line.x2) == std::abs(line.y1 - line.y2))
+    else if(withDiag && (std::abs(line.x1 - line.x2) == std::abs(line.y1 - line.y2))) //Comment that for first part of day
     {
         int dirX = (line.x1 > line.x2) ? -1 : 1;
         int dirY = (line.y1 > line.y2) ? -1 : 1;
