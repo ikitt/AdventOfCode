@@ -9,6 +9,7 @@
 #include "Y21Day06.h"
 #include "Y21Day07.h"
 #include "Y21Day08.h"
+#include "Y21Day09.h"
 
 int main(int argc, char *argv[])
 {
@@ -60,12 +61,18 @@ int main(int argc, char *argv[])
     Y21Day07::computFirstResult();
     Y21Day07::computSecondResult();
 
-//    */
 
     //DAY 8
     //=====
     Y21Day08::computFirstResult();
     Y21Day08::computSecondResult();
+
+//    */
+
+    //DAY 9
+    //=====
+    Y21Day09::computFirstResult();
+    Y21Day09::computSecondResult();
 
 
     return a.exec();
