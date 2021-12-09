@@ -4,6 +4,12 @@
 #include <QString>
 #include <QVector>
 
+#include "utils/commonStruct.h"
+
+typedef struct Bassin
+{
+    QVector<Point> points = {};
+}Bassin;
 
 class Map
 {
@@ -13,31 +19,21 @@ public:
     Map(const QVector<QString>);
 
 
-    QVector<int> getNeighbourg(int row, int column) const;
+    QVector<Point> getNeighbourg(int row, int column, bool withDiago = false) const;
     QVector<QVector<int>> getVisible(int row, int column) const;
 
     bool isLowPoint(int row, int column);
-//    int countEmpty() const;
-//    int countOccup() const;
-//    int countFloor() const;
-//    int countEmpty(int row, int column) const;
-//    int countOccup(int row, int column) const;
-//    int countFloor(int row, int column) const;
+    bool isLowPointOfStranger(const Point &pt, const Bassin& bass);
+    bool isInBassin(Point pt, const Bassin &bas);
 
-//    static Map computeNext(const Map& initialState);
-//    static Map computeNextVisible(const Map& initialState);
+    void expandBassin(QVector<Point> lowPoints, Bassin &bass);
+
+    Point newPoint(int row, int column) const;
 
     void print();
 
     inline bool operator==(const Map& other) {return (_map == other._map);};
 
-
-//    static const QString EMPTY;
-//    static const QString OCCUP;
-//    static const QString FLOOR;
-
-//    static const int OCCUP_TH;
-//    static const int EMPTY_TH;
     QVector<QVector<int>> _map;
 
 private:

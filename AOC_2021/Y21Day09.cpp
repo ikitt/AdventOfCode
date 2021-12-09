@@ -27,8 +27,42 @@ void Y21Day09::computFirstResult()
 
 void Y21Day09::computSecondResult()
 {
+    fprintf(stdout, "Enter compute second\r\n");
+    fflush(stdout);
 
-    fprintf(stdout, "Res for second part");
+    Map inMap(_input);
+
+    QVector<Bassin> allBassins {};
+
+    for(int row =0 ; row < inMap._map.size() ; row++)
+    {
+        for(int column = 0 ; column < inMap._map[row].size() ; column++)
+        {
+            if(inMap.isLowPoint(row,column))
+            {
+//                fprintf(stdout, "Find a low point at [%i][%i]\r\n", row, column);
+//                fflush(stdout);
+
+                Point lowPoint; lowPoint.x = column; lowPoint.y = row; lowPoint.value = inMap._map[row][column];
+                Bassin bass; bass.points = {}; bass.points.push_back(lowPoint);
+                inMap.expandBassin(bass.points, bass);
+                allBassins.push_back(bass);
+
+                fprintf(stdout, "New bass starting at [%i][%i] of size %i\r\n", row, column, bass.points.size());
+                fflush(stdout);
+            }
+
+        }
+    }
+
+    std::sort(allBassins.begin(), allBassins.end(), [](Bassin a, Bassin b) {return a.points.size() < b.points.size();});
+
+    int basNbr = allBassins.size();
+
+    fprintf(stdout, "Max  bass size are %i, %i and %i\r\n", allBassins[basNbr-1].points.size(), allBassins[basNbr-2].points.size(), allBassins[basNbr-3].points.size());
+    fflush(stdout);
+
+    fprintf(stdout, "Res for second part %i\r\n", allBassins[basNbr-1].points.size() * allBassins[basNbr-2].points.size() * allBassins[basNbr-3].points.size());
     fflush(stdout);
 }
 
@@ -48,124 +82,33 @@ Map::Map(const QVector<QString> input)
     }
 }
 
-//Map::Map(const Map& copy)
-//{
-//    _map = QVector<QVector<QString>>({});
 
-//    for(int row = 0 ; row < copy._map.size() ; row++)
-//    {
-//        _map.push_back(QVector<QString>());
-//        for(int column = 0 ; column < copy._map[row].size() ; column++)
-//        {
-//            _map[row].push_back(copy._map[row][column]);
-//        }
-
-//    }
-//}
-
-
-//Map Map::computeNext(const Map& initialState)
-//{
-//    Map nextState = Map(initialState);
-
-//    for(int row = 0 ; row < initialState._map.size() ; row++)
-//    {
-//        for(int column = 0 ; column < initialState._map[row].size() ; column++)
-//        {
-//            if(initialState._map[row][column] == FLOOR)
-//                continue;
-//            else if(initialState.countOccup(row, column) <= OCCUP_TH)
-//                nextState._map[row][column] = OCCUP;
-//            else if(initialState.countOccup(row, column) >= EMPTY_TH)
-//                nextState._map[row][column] = EMPTY;
-//        }
-//    }
-//    return nextState;
-//}
-
-//Map Map::computeNextVisible(const Map& initialState)
-//{
-//    Map nextState = Map(initialState);
-
-//    for(int row = 0 ; row < initialState._map.size() ; row++)
-//    {
-//        for(int column = 0 ; column < initialState._map[row].size() ; column++)
-//        {
-//            if(initialState._map[row][column] == FLOOR)
-//                continue;
-//            else if(initialState.getVisible(row, column).count(OCCUP) <= OCCUP_TH)
-//                nextState._map[row][column] = OCCUP;
-//            else if(initialState.getVisible(row, column).count(OCCUP) >= EMPTY_TH)
-//                nextState._map[row][column] = EMPTY;
-//        }
-//    }
-//    return nextState;
-//}
-
-
-QVector<int> Map::getNeighbourg(int row, int column) const
+QVector<Point> Map::getNeighbourg(int row, int column, bool withDiago) const
 {
-    QVector<int> res;
+    QVector<Point> res = {};
 
     if(row > 0)
-        res.push_back(_map[row-1][column]);
+        res.push_back(newPoint(row-1, column));
     if(row < (_map.size() -1))
-        res.push_back(_map[row+1][column]);
+        res.push_back(newPoint(row+1, column));
     if(column > 0)
-        res.push_back(_map[row][column-1]);
+        res.push_back(newPoint(row, column-1));
     if(column < _map[row].size()-1)
-        res.push_back(_map[row][column+1]);
-    if((row > 0) && (column > 0))
-        res.push_back(_map[row -1 ][column -1]);
-    if((row > 0) && (column < _map[row].size()-1))
-        res.push_back(_map[row-1][column +1]);
-    if((row < (_map.size() -1)) && column > 0)
-        res.push_back(_map[row + 1][column - 1]);
-    if((row < (_map.size() -1)) && (column < _map[row].size()-1))
-        res.push_back(_map[row + 1][column + 1]);
+        res.push_back(newPoint(row, column+1));
+    if(withDiago)
+    {
+        if((row > 0) && (column > 0))
+            res.push_back(newPoint(row -1 ,column -1));
+        if((row > 0) && (column < _map[row].size()-1))
+            res.push_back(newPoint(row-1, column +1));
+        if((row < (_map.size() -1)) && column > 0)
+            res.push_back(newPoint(row + 1, column - 1));
+        if((row < (_map.size() -1)) && (column < _map[row].size()-1))
+            res.push_back(newPoint(row + 1, column + 1));
+    }
 
     return res;
 }
-
-//QVector<QString> Map::getVisible(int row, int column) const
-//{
-//    QVector<QString> res;
-
-//    QVector<QPair<int,int>> allDirection = {
-//        {-1,0},
-//        {-1,1},
-//        {0,1},
-//        {1,1},
-//        {1,0},
-//        {1,-1},
-//        {0,-1},
-//        {-1,-1}
-//    };
-
-//    for (QPair<int,int> dir : allDirection)
-//    {
-//        bool findSeat = false;
-//        bool outOfBound = false;
-
-//        QPair<int,int> nextCoord = {row, column};
-
-//        while (!(findSeat || outOfBound)) {
-//            nextCoord = {nextCoord.first + dir.first, nextCoord.second + dir.second};
-//            if(coorOk(nextCoord))
-//            {
-//                findSeat = (_map[nextCoord.first][nextCoord.second] != FLOOR);
-//            }
-//            else
-//            {
-//                outOfBound = true;
-//            }
-//        }
-//        if(findSeat)
-//            res.push_back(_map[nextCoord.first][nextCoord.second]);
-//    }
-
-//    return res;
-//}
 
 
 bool Map::coorOk(QPair<int,int> dir) const
@@ -182,9 +125,11 @@ bool Map::coorOk(QPair<int,int> dir) const
 bool Map::isLowPoint(int row, int column)
 {
     bool res = true;
-    for(int neigbhbor : getNeighbourg(row, column))
+//    QVector<Point> neighborhood = getNeighbourg(row, column);
+    for(Point neigbhbor : getNeighbourg(row, column))
     {
-        if(_map[row][column] > neigbhbor)
+        int value = neigbhbor.value;
+        if(_map[row][column] > value)
         {
             res = false;
             break;
@@ -193,55 +138,87 @@ bool Map::isLowPoint(int row, int column)
     return res;
 }
 
-//int Map::countEmpty() const
-//{
-//    int res = 0;
-//    for(QVector<QString> line : _map)
-//    {
-//        res += line.count(EMPTY);
-//    }
-//    return res;
-//}
+bool Map::isLowPointOfStranger(const Point& pt, const Bassin &bass)
+{
+
+    bool res = true;
+//    QVector<Point> neighborhood = getNeighbourg(row, column);
+    for(Point neigbhbor : getNeighbourg(pt.y, pt.x))
+    {
+        if(pt.y == 1 && pt.x == 2)
+        {
+//            fprintf(stdout, "    BreakPoint\r\n");
+//            fflush(stdout);
+        }
+        if(isInBassin(neigbhbor, bass))
+            continue;
+        int value = neigbhbor.value;
+        if(pt.value > value)
+        {
+
+            res = false;
+            break;
+        }
+    }
+    return res;
+}
+
+bool Map::isInBassin(Point pt, const Bassin &bas)
+{
+    for(Point bPt : bas.points)
+    {
+        if((pt.x == bPt.x) && (pt.y == bPt.y))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Map::expandBassin(QVector<Point> lowPoints, Bassin& bass)
+{
+    QVector<Point> newLowPoint = {};
+    for(Point lowPt : lowPoints)
+    {
+        for(Point neighbor : getNeighbourg(lowPt.y,lowPt.x))
+        {
+            if(isInBassin(neighbor,bass))
+                continue;
+            else if((neighbor.value != 9) && isLowPointOfStranger(neighbor, bass))
+            {
+                newLowPoint.push_back(neighbor);
+                bass.points.push_back(neighbor);
+                continue; //TRVD add to log
+            }
+            else
+            {
+//                fprintf(stdout, "Do not add _map[%i][%i]=%i, neighbor of _map[%i][%i]=%i\r\n", neighbor.y, neighbor.x, neighbor.value, lowPt.y, lowPt.x, lowPt.value);
+//                fflush(stdout);
+            }
+
+        }
+    }
+    if(newLowPoint.size() > 0 )
+    {
+        expandBassin(newLowPoint, bass);
+    }
+    else
+    {
+        return;
+    }
+}
 
 
-//int Map::countOccup() const
-//{
-//    int res = 0;
-//    for(QVector<QString> line : _map)
-//    {
-//        res += line.count(OCCUP);
-//    }
-//    return res;
-//}
+Point Map::newPoint(int row, int column) const
+{
+    Point res;
+    res.x = column;
+    res.y = row;
+    res.value = _map[row][column];
+    return res;
+}
 
 
-//int Map::countFloor() const
-//{
-//    int res = 0;
-//    for(QVector<QString> line : _map)
-//    {
-//        res += line.count(FLOOR);
-//    }
-//    return res;
-//}
-
-
-//int Map::countEmpty(int row, int column) const
-//{
-//    return getNeighbourg(row, column).count(EMPTY);
-//}
-
-
-//int Map::countOccup(int row, int column) const
-//{
-//    return getNeighbourg(row, column).count(OCCUP);
-//}
-
-
-//int Map::countFloor(int row, int column) const
-//{
-//    return getNeighbourg(row, column).count(FLOOR);
-//}
 
 void Map::print()
 {
@@ -257,18 +234,9 @@ void Map::print()
 }
 
 
-//const QString Map::EMPTY = "L";
-//const QString Map::OCCUP = "#";
-//const QString Map::FLOOR = ".";
-
-
-//const int Map::OCCUP_TH = 0;
-////const int Map::EMPTY_TH = 4;
-//const int Map::EMPTY_TH = 5;
-
 //exemple input =>
 /*Res first part = 15
-///*Res second part =
+///*Res second part = 1134
 const QVector<QString> Y21Day09::_input = {
     "2199943210",
     "3987894921",
@@ -279,8 +247,8 @@ const QVector<QString> Y21Day09::_input = {
 // */
 
 // /*
-// Res first part
-// Res second  part
+// Res first part 475
+// Res second  part 1092012
 const QVector<QString> Y21Day09::_input = {
     "9987632123989012498765323467892101296546544569898545696545976534567987789212976789887578878998765432",
     "9876541019878923569989413568943919985435433698767434989439899676779876678929875698765454969899893210",

@@ -5,17 +5,8 @@
 #include <QVector>
 #include <QPair>
 
-typedef struct Line{
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-} Line;
+#include "utils/commonStruct.h"
 
-typedef struct Point{
-    int x;
-    int y;
-} Point;
 
 class Y21Day05
 {
@@ -24,8 +15,6 @@ public:
 
     static void computFirstResult();
     static void computSecondResult();
-
-
 
 private:
     static QVector<Line> _lines;

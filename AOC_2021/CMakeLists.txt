@@ -15,6 +15,7 @@ find_package(Qt5Core)
 
 add_executable(AOC_2021
   main.cpp
+  utils/commonStruct.h
   Y21Day01.cpp
   Y21Day01.h
   Y21Day02.cpp
