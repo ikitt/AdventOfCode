@@ -16,7 +16,7 @@ void Y21Day00::computFirstResult()
 void Y21Day00::computSecondResult()
 {
 
-    fprintf(stdout, "Res for second part");
+    fprintf(stdout, "Res for second part\r\n");
     fflush(stdout);
 }
 

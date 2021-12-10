@@ -1,6 +1,6 @@
 #include <QCoreApplication>
 
-
+/*
 #include "Y21Day01.h"
 #include "Y21Day02.h"
 #include "Y21Day03.h"
@@ -10,6 +10,8 @@
 #include "Y21Day07.h"
 #include "Y21Day08.h"
 #include "Y21Day09.h"
+*/
+#include "Y21Day10.h"
 
 int main(int argc, char *argv[])
 {
@@ -67,12 +69,18 @@ int main(int argc, char *argv[])
     Y21Day08::computFirstResult();
     Y21Day08::computSecondResult();
 
-//    */
 
     //DAY 9
     //=====
     Y21Day09::computFirstResult();
     Y21Day09::computSecondResult();
+
+//    */
+
+    //DAY 10
+    //=====
+    Y21Day10::computFirstResult();
+    Y21Day10::computSecondResult();
 
 
     return a.exec();
