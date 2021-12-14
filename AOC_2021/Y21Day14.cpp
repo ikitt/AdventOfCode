@@ -11,13 +11,19 @@ Y21Day14::Y21Day14()
 
 void Y21Day14::computFirstResult()
 {
-    fprintf(stdout, "Start Day 14 first part\r\n");
+    fprintf(stdout, "Start Day 14 second part\r\n");
     fflush(stdout);
 
-    readInput();
+    readInput2();
     for(int i = 0; i < 10; i++)
-        applyRules();
-    countPoint();
+    {
+        fprintf(stdout, "Turn %i\r\n",i);
+        fflush(stdout);
+        applyRules2();
+//        displayCounter();
+
+    }
+    countPoint2();
 }
 
 
@@ -26,19 +32,22 @@ void Y21Day14::computSecondResult()
     fprintf(stdout, "Start Day 14 second part\r\n");
     fflush(stdout);
 
-    readInput();
+    readInput2();
     for(int i = 0; i < 40; i++)
     {
-        fprintf(stdout, "Turn %i \r\n", i);
+        fprintf(stdout, "Turn %i\r\n",i);
         fflush(stdout);
-        applyRules();
+        applyRules2();
+//        displayCounter();
+
     }
-    countPoint();
+    countPoint2();
 }
 
 void Y21Day14::readInput()
 {
     bool inRules = false;
+    _polymer = {};
     for(QString line : _input)
     {
         line = line.simplified();
@@ -47,39 +56,75 @@ void Y21Day14::readInput()
             if(line.isEmpty())
                 inRules = true;
             else
-                _polymer = line;
+                for(QChar letter : line)
+                    _polymer.push_back(letter.toLatin1());
         }
         else
         {
             QStringList splittedRule = line.split(" -> ", QString::SkipEmptyParts);
-            _rules[splittedRule[0]] = splittedRule[1][0];
+            std::string pair = "";
+            pair.resize(2);
+            pair[0] = splittedRule[0][0].toLatin1();
+            pair[1] = splittedRule[0][1].toLatin1();
+            _rules[pair] = splittedRule[1][0].toLatin1();
         }
     }
 }
 
+
 void Y21Day14::applyRules()
 {
-    QVector<QString> pairList = {};
-    QString pair="";
-    for(int idx = _polymer.size()-2 ; idx >= 0; idx--)
+    char pair[2];
+    std::vector<char> nextLine = {};
+    unsigned long long int nextLineIdx = 0;
+    int nonRulesPair = 0;
+    nonRulesPair = _polymer.size()*2-1;
+    nextLine.resize(_polymer.size()*2-1);
+    nonRulesPair = 0;
+    nonRulesPair = 0;
+    nonRulesPair = 0;
+    for(unsigned long long int  idx = 0 ; idx < (_polymer.size()-1); idx++)
     {
-        pair = _polymer.mid(idx,2);
+        pair[0] = _polymer[idx];
+        pair[1] = _polymer[idx+1];
+        nextLine[nextLineIdx++] = pair[0];
         if(_rules.keys().contains(pair))
         {
-            _polymer.insert(idx+1, _rules[pair]);
+            nextLine[nextLineIdx++] = _rules[pair];
+            nextLine[nextLineIdx++] = pair[1];
+
+//            _polymer.insert(idx+1, _rules[pair]);
         }
-    }/*
-    for(int idx = 0 ; idx < _polymer.size()-1 ; idx++)
-    {
-        pairList.push_back(_polymer.mid(idx,2));
+        else
+        {
+            throw std::runtime_error("fuck");
+        }
     }
-    for(int idx = pairList.size()-1 ; idx >= 0; idx--)
-    {
-    }*/
+    _polymer = nextLine;
+
+//    QString pair="";
+//    for(int idx = _polymer.size()-2 ; idx >= 0; idx--)
+//    {
+//        pair = _polymer.mid(idx,2);
+//        if(_rules.keys().contains(pair))
+//        {
+//            _polymer.insert(idx+1, _rules[pair]);
+//        }
+//    }
+
+//    for(int idx = 0 ; idx < _polymer.size()-1 ; idx++)
+//    {
+//        pairList.push_back(_polymer.mid(idx,2));
+//    }
+//    for(int idx = pairList.size()-1 ; idx >= 0; idx--)
+//    {
+//    }
+
 //    fprintf(stdout, "After rules _polymer is %s\r\n", _polymer.toStdString().c_str());
 //    fflush(stdout);
     //For each pair from end to begin insert if corresponding rules exist
 }
+
 
 void Y21Day14::countPoint()
 {
@@ -109,10 +154,143 @@ void Y21Day14::countPoint()
 }
 
 
-QString  Y21Day14::_polymer = {};
-QMap<QString, QChar> Y21Day14::_rules = {};
+void Y21Day14::readInput2()
+{
+    bool inRules = false;
+    _polymer = {};
+    _counter = {};
+    _newCounter = {};
+    for(QString line : _input)
+    {
+        line = line.simplified();
+        if(!inRules)
+        {
+            if(line.isEmpty())
+                inRules = true;
+            else
+                for(QChar letter : line)
+                    _polymer.push_back(letter.toLatin1());
+        }
+        else
+        {
+            QStringList splittedRule = line.split(" -> ", QString::SkipEmptyParts);
+            std::string pair = "";
+            pair.resize(2);
+            pair[0] = splittedRule[0][0].toLatin1();
+            pair[1] = splittedRule[0][1].toLatin1();
+            _rules[pair] = splittedRule[1][0].toLatin1();
+
+            _counter[pair] = 0;
+            _newCounter[pair] = 0;
+        }
+    }
+//    displayCounter();
+
+    std::string pair = "";
+    pair.resize(2);
+
+    for(unsigned long long int idx = 0 ; idx < (_polymer.size()-1); idx++)
+    {
+        pair[0] = _polymer[idx];
+        pair[1] = _polymer[idx+1];
+        _counter[pair] = _counter[pair] +1;
+//        displayCounter();
+    }
+}
+
+
+void Y21Day14::applyRules2()
+{
+    QMap<std::string, unsigned long long int>  nextCounter = _newCounter;
+    for(std::string cpair : _counter.keys())
+    {
+        std::string pair_l = ""; std::string  pair_r = "";
+        pair_l.resize(2);pair_r.resize(2);
+        pair_l[0] = cpair[0];
+        pair_l[1] = _rules[cpair];
+        pair_r[0] = _rules[cpair];
+        pair_r[1] = cpair[1];
+
+//        fprintf(stdout, "From pair %s up %s and %s\r\n", cpair.c_str(), pair_l.c_str(), pair_r.c_str());
+//        fflush(stdout);
+
+        nextCounter[pair_l] = nextCounter[pair_l]+_counter[cpair];
+        nextCounter[pair_r] = nextCounter[pair_r]+_counter[cpair];
+    }
+    _counter = nextCounter;
+}
+
+void Y21Day14::countPoint2()
+{
+    QMap<char,unsigned long long int> letterCounter = {};
+    for(std::string key : _counter.keys())
+    {
+        char letter0 = key[0];
+        char letter1 = key[1];
+
+        if(letterCounter.keys().contains(letter0))
+            letterCounter[letter0] = letterCounter[letter0]+_counter[key];
+        else
+            letterCounter[letter0] = _counter[key];
+
+        if(letterCounter.keys().contains(letter1))
+            letterCounter[letter1] = letterCounter[letter1]+_counter[key];
+        else
+            letterCounter[letter1] = _counter[key];
+
+//        displayLetterCounter(letterCounter);
+
+    }
+
+    letterCounter[_polymer.front()] += 1;
+    letterCounter[_polymer.back()] += 1;
+
+//    displayLetterCounter(letterCounter);
+
+    char highestLetter = 'N';
+    char lowestLetter = 'N';
+    for(char key : letterCounter.keys())
+    {
+        if(letterCounter[key] > letterCounter[highestLetter])
+            highestLetter = key;
+
+        if(letterCounter[key] < letterCounter[lowestLetter])
+            lowestLetter = key;
+    }
+
+
+    fprintf(stdout, "Max char is %c(%llu) and lowest %c(%llu) so result is %llu\r\n", highestLetter, letterCounter[highestLetter]/2, lowestLetter, letterCounter[lowestLetter]/2, (letterCounter[highestLetter] - letterCounter[lowestLetter])/2);
+    fflush(stdout);
+}
+
+void Y21Day14::displayCounter()
+{
+    fprintf(stdout, "####\r\n");
+    for(std::string key: _counter.keys())
+    {
+
+        fprintf(stdout, "For pair %s got %llu occurences\r\n", key.c_str(), _counter[key]);
+        fflush(stdout);
+    }
+}
+
+void Y21Day14::displayLetterCounter(QMap<char,unsigned long long int>& letterCounter)
+{
+    fprintf(stdout, "#### letter counter\r\n");
+    for(char key: letterCounter.keys())
+    {
+
+        fprintf(stdout, "For pair %c got %llu occurences\r\n", key, letterCounter[key]);
+        fflush(stdout);
+    }
+}
+
+std::vector<char> Y21Day14::_polymer = {};
+QMap<std::string, char> Y21Day14::_rules = {};
+QMap<std::string, unsigned long long int>  Y21Day14::_counter = {};
+QMap<std::string, unsigned long long int>  Y21Day14::_newCounter = {};
 //exemple input =>
-///*Res first part =
+/*Res first part =
 ///*Res second part =
 const QVector<QString> Y21Day14::_input = {
     "NNCB   ",
@@ -136,9 +314,9 @@ const QVector<QString> Y21Day14::_input = {
 };
 // */
 
- /*
+// /*
 // Res first part => 3406
-// Res second  part
+// Res second  part => 3941782230241
 const QVector<QString> Y21Day14::_input = {
     "KOKHCCHNKKFHBKVVHNPN",
     "       ",
