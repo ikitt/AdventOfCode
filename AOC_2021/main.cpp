@@ -10,8 +10,11 @@
 #include "Y21Day07.h"
 #include "Y21Day08.h"
 #include "Y21Day09.h"
+//#include "Y21Day11.h"
+//#include "Y21Day12.h"
+//#include "Y21Day13.h"
 */
-#include "Y21Day10.h"
+#include "Y21Day14.h"
 
 int main(int argc, char *argv[])
 {
@@ -75,12 +78,18 @@ int main(int argc, char *argv[])
     Y21Day09::computFirstResult();
     Y21Day09::computSecondResult();
 
-//    */
 
     //DAY 10
     //=====
     Y21Day10::computFirstResult();
     Y21Day10::computSecondResult();
+
+//    */
+
+    //DAY 14
+    //=====
+    Y21Day14::computFirstResult();
+    Y21Day14::computSecondResult();
 
 
     return a.exec();
