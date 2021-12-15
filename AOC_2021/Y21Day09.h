@@ -14,7 +14,7 @@ typedef struct Bassin
 class Map
 {
 public:
-    Map();
+    Map(){_map = {};};
 //    Map(const Map& copy);
     Map(const QVector<QString>);
 

@@ -15,4 +15,6 @@ typedef struct Line{
     int y2;
 } Line;
 
+
+
 #endif // COMMON_STRUCT
