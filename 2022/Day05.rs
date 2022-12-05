@@ -5,6 +5,7 @@ fn main() {
     println!("Hello, world!");
     let mut crate_state: HashMap<i32, Vec<char>> = HashMap::new();
     
+    // Get Initial state
     for line in INPUT_INIT
     {
         for char_idx in 0..line.len()
@@ -15,18 +16,83 @@ fn main() {
             }
             if crate_state.keys().any(|&x| x == (char_idx + 1) as i32)
             {
-                crate_state[&((char_idx + 1) as i32)].push(line.chars().nth(char_idx).unwrap());
-                println!("Got it");
+                crate_state.get_mut(&((char_idx + 1) as i32)).unwrap().push(line.chars().nth(char_idx).unwrap());
+                // println!("Got it");
             }
             else
             {
                 crate_state.insert((char_idx + 1) as i32, vec!(line.chars().nth(char_idx).unwrap()));
-                println!("First in pile {} is {}", char_idx + 1, line.chars().nth(char_idx).unwrap());
+                // println!("First in pile {} is {}", char_idx + 1, line.chars().nth(char_idx).unwrap());
             }
         }
     }
-    // println!("Day1Part1 {}", compute_day_1_part_1())
-    println!("Day3Part1 ");
+    
+    for line in INPUT_ISTRU
+    {
+        let mut line_str: String = String::from(line);
+        let mut istru: (i32, i32, i32) = (0,0,0);
+        istru.0 = line_str.split(' ').collect::<Vec<&str>>()[0].parse::<i32>().unwrap();
+        istru.1 = line_str.split(' ').collect::<Vec<&str>>()[1].parse::<i32>().unwrap();
+        istru.2 = line_str.split(' ').collect::<Vec<&str>>()[2].parse::<i32>().unwrap();
+        
+        let mut moving_crates: Vec<char>= vec!();
+        for cpt in 0..istru.0
+        {
+            moving_crates.push(crate_state.get_mut(&(istru.1)).unwrap().pop().unwrap());
+        }
+        // for cpt in 0..istru.0
+        // {
+        //     moving_crates.push(crate_state.get_mut(&(istru.2)).unwrap().pop().unwrap());
+        // }
+        for cpt in 0..istru.0
+        {
+            crate_state.get_mut(&(istru.2)).unwrap().push(moving_crates.pop().unwrap());
+        }
+        // println!("After move");
+        // for crat in crate_state.get_mut(&(istru.2)).unwrap()
+        // {
+        //     print!("{}", crat);
+            
+        // }
+        // println!("");
+        
+        // for crat in crate_state.get_mut(&(istru.2)).unwrap()
+        // {
+        //     print!("{}", crat);
+            
+        // }
+        // println!("");
+            
+        // println!("Will move");
+        // for crat in moving_crates
+        // {
+        //     print!("{}", crat);
+            
+        // }
+        // println!("");
+        
+        // break;
+    }
+    print!("Day3Part1: ");
+    for key in 1..10//crate_state.keys()
+    {
+        print!("{}", crate_state.get(&(key)).unwrap().last().unwrap());
+    }
+    println!("");
+    print(crate_state);
+}
+
+fn print(crate_state: HashMap<i32, Vec<char>>) -> () {
+    for key in 1..10//crate_state.keys()
+    {
+        println!("");
+        println!("###################################");
+        print!("Line {}: ",&key);
+        for crat in crate_state.get(&key).unwrap()
+        {
+            print!("{}", crat);
+        }
+    }
 }
 
 //   static ref PRIVILEGES: HashMap<&'static str, Vec<&'static str>> = {
@@ -45,7 +111,8 @@ const INPUT_INIT: [&str; 8] = [
 "NG     Q "
 ];
 
-const INPUT_INSTRU: [&str; 502] = [
+// Incorrect QLFQDBBHM
+const INPUT_ISTRU: [&str; 502] = [
 "3 1 2",
 "1 7 1",
 "1 6 5",
