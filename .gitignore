@@ -7,7 +7,9 @@
 *.dll
 *.zip
 **/input/*
+**/target/*
 Build/
 log/
 build-*
 CMakeLists.txt.user
+Cargo.lock
