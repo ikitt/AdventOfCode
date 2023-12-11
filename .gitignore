@@ -5,6 +5,8 @@
 *.Debug
 *.Release
 *.dll
+*.zip
+**/input/*
 Build/
 log/
 build-*
