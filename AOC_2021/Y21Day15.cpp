@@ -1,5 +1,6 @@
 #include "Y21Day15.h"
 #include <limits>
+#include "utils/commonFuntion.h"
 
 Y21Day15::Y21Day15()
 {
@@ -137,8 +138,8 @@ const QVector<QString> Y21Day15::_input = {
 // */
 
 // /*
-// Res first part
-// Res second  part
+// Res first part 811
+// Res second  part 3012
 const QVector<QString> Y21Day15::_input = {
     "8897989158773769986683317126949895844789898919988982846976854887698859721879997687955719111598998327",
     "9649369117599598197939482994919879998758884941925999937589283638799993484872917997897895739989579191",

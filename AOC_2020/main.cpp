@@ -30,8 +30,6 @@
 //#include "Y20Day25.h"
 
 
-#include "TmpAngellCount.h" //TRVD
-
 int main(int argc, char *argv[])
 {
     fprintf(stdout, "start main \r\n");
@@ -61,13 +59,13 @@ int main(int argc, char *argv[])
     fprintf(stdout, "Solving this take %i\r\n", start.msecsTo(end));
     fflush(stdout);
 
-
+*/
     //DAY 2
     //=====
     Y20Day02::computFirstResult();
-    Y20Day02::computSecondResult();
+//    Y20Day02::computSecondResult();
 
-
+/*
     //DAY 3
     //=====
     Y20Day03::computFirstResult();
@@ -231,16 +229,12 @@ int main(int argc, char *argv[])
 */
 
 
-//    //DAY 19
-//    //======
+    //DAY 19
+    //======
 //    fprintf(stdout, "start day 19\r\n");
 //    fflush(stdout);
-////    Y20Day19::computFirstResult();
+//    Y20Day19::computFirstResult();
 //    Y20Day19::computSecondResult();
-
-    //tmp vallec
-    TmpAngellCount::listMacInLinkFile();
-    TmpAngellCount::countMacInLinkFiles();
 
     /*
 

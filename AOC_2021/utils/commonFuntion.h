@@ -1,28 +1,27 @@
-#ifndef COMMON_STRUCT
-#define COMMON_STRUCT
+#ifndef COMMON_FUNC
+#define COMMON_FUNC
 
 #include <QString>
 #include <QVector>
-//#include <QFile>
-//#include <QDir>
-//#include <QTextStream>
+#include <fstream>
 
 
 void fileAsStrVect(QString fullPath, QVector<QString>& out)
 {
-
-//    QFile toReadFile(fullPath);
-//    QTextStream streamFile(toReadFile.readLine());
-//    QString fileContent = "";
-//    if (!toReadFile.open(QIODevice::ReadOnly | QIODevice::Text))
-//    {
-//        throw(std::runtime_error("unable to open file\n"));
-//    }
-//    while(toReadFile.is)
-//    {
-//        fileContent = toReadFile.readAll();
-//    }
-//    currentFile.close();
+    std::string line;
+    std::ifstream myfile (fullPath.toStdString());
+    if (myfile.is_open())
+    {
+        while ( getline (myfile,line) )
+        {
+            out.push_back(QString(line.c_str()));
+        }
+        myfile.close();
+    }
+    else
+    {
+        throw std::runtime_error("Unable to open file.");
+    }
 }
 
-#endif // COMMON_STRUCT
+#endif // COMMON_FUNC

@@ -1,11 +1,44 @@
 #include "Y20Day19Bis.h"
 
-Y20Day19Bis::Y20Day19Bis()
-{
+//Y20Day19Bis::Y20Day19Bis()
+//{
 
-}
+//}
 
 
+//void Y20Day19Bis::readInput()
+//{
+//    bool inRules = true;
+//    for(QString line : _input)
+//    {
+//        line = line.simplified();
+
+//        if(line.isEmpty())
+//        {
+//            inRules = false;
+//            continue;
+//        }
+
+//        if(inRules)
+//        {
+//            int ruleId = line.split(":")[0].toInt();
+//            QString rule = line.split(":")[1].simplified();
+//            rule.append(" ");
+//            rule.prepend(" ");
+
+//            if(_baseRules.keys().contains(ruleId))
+//                throw std::runtime_error("Multiple definition for rules " + std::to_string(ruleId));
+//            else
+//                _baseRules[ruleId] = rule;
+//        }
+//        else
+//        {
+//            _msg << line.simplified();
+//            _maxMsgSize = std::max(_maxMsgSize, line.simplified().size());
+//            _minMsgSize = std::min(_minMsgSize, line.simplified().size());
+//        }
+//    }
+//}
 
 /* Test
 const QVector<QString> Y20Day19Bis::_input =

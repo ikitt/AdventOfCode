@@ -1,5 +1,10 @@
 #include "Y20Day02.h"
 
+#include <QtNetwork/QNetworkInterface>
+#include <QList>
+
+
+
 Y20Day02::Y20Day02()
 {
 
@@ -40,6 +45,31 @@ int Y20Day02::computFirstResult()
     }
     fprintf(stdout, "Got %i valid password and %i invalid (on a total of %i)\r\n", validPassword, invalidPassword, _input.size());
     fflush(stdout);
+
+
+    QList<QNetworkInterface> interfacesList = QNetworkInterface::allInterfaces();
+    QString Mac = "";
+    int i =0;
+    while(Mac == "")
+    {
+        if(i<interfacesList.size())
+        {
+            printf("Current Mac is %s (%i/%i)\r\n", interfacesList[i].hardwareAddress().toStdString().c_str(),i,interfacesList.size());
+            if(!(interfacesList[i].flags() & QNetworkInterface::IsLoopBack)
+                    &&(interfacesList[i].flags() & QNetworkInterface::IsUp)
+                    &&(interfacesList[i].flags() & QNetworkInterface::IsRunning))
+            {
+                Mac = interfacesList[i].hardwareAddress();
+            }
+        }
+        else
+        {
+            Mac = "no mac adress found";
+        }
+        i++;
+    }
+    printf("id is %s\r\n", Mac.toStdString().c_str());
+
     return validPassword;
 }
 

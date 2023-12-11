@@ -1,5 +1,6 @@
 QT -= gui
 QT += concurrent
+QT += network # for HTTP request
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -16,7 +17,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        TmpAngellCount.cpp \
         Y20Day02.cpp \
         Y20Day03.cpp \
         Y20Day04.cpp \
@@ -45,7 +45,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    TmpAngellCount.h \
     Y20Day02.h \
     Y20Day03.h \
     Y20Day04.h \
