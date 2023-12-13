@@ -2,6 +2,7 @@
 
 use std::fs::read_to_string;
 use std::cmp;
+use regex::Regex;
 
 
 
@@ -12,8 +13,13 @@ use std::cmp;
 // }
 
 pub fn compute_day_1_part_1() -> u64 {
-    for line in read_to_string("C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_in.txt").unwrap().lines() {
-        println!("{}", line.to_string());
+    // let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_in.txt";
+    let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_test.txt";
+    for line in read_to_string(input_path).unwrap().lines() {
+
+        let re = Regex::new(r"(\d)").unwrap();
+        let my_caps: Vec<u64> = re.find_iter(line).filter_map(|cap| cap.as_str().parse().ok()).collect();  //https://stackoverflow.com/questions/58010114/capture-all-regex-matches-into-a-vector
+        println!("{} with {:?}", line.to_string(), my_caps);
     }
     return 1;
 
