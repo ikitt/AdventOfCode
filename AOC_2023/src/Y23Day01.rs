@@ -3,6 +3,7 @@
 use std::fs::read_to_string;
 use std::cmp;
 use regex::Regex;
+use std::collections::HashMap;
 
 
 
@@ -13,68 +14,52 @@ use regex::Regex;
 // }
 
 pub fn compute_day_1_part_1() -> u64 {
-    // let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_in.txt";
-    let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_test.txt";
+    let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_in.txt";
+    // let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_test1.txt";
+    let mut result: u64 = 0;
     for line in read_to_string(input_path).unwrap().lines() {
 
-        let re = Regex::new(r"(\d)").unwrap();
+        let re = Regex::new(r"(\d|one|two|three|four|five|six|seven|eight|nine)").unwrap();
         let my_caps: Vec<u64> = re.find_iter(line).filter_map(|cap| cap.as_str().parse().ok()).collect();  //https://stackoverflow.com/questions/58010114/capture-all-regex-matches-into-a-vector
-        println!("{} with {:?}", line.to_string(), my_caps);
+        result += my_caps.first().unwrap()*10 + my_caps.last().unwrap();
+        // println!("{} with {:?} => {} {} => {}", line.to_string(), my_caps, my_caps.first().unwrap(), my_caps.last().unwrap(), my_caps.first().unwrap()*10 + my_caps.last().unwrap());
     }
-    return 1;
-
-
-
-
-    // let mut max_sum: u64 = 0;
-    // let mut curr_sum: u64 = 0;
-    // for idx in 0..INPUT.len() {
-    //     if INPUT[idx].len() == 0
-    //     {
-    //         max_sum = cmp::max(curr_sum, max_sum);
-    //         println!("Find a sum equal to {}", curr_sum);
-    //         curr_sum = 0;
-    //     }
-    //     else
-    //     {
-    //         curr_sum += INPUT[idx].parse::<u64>().unwrap();
-    //     }
-    // }
-    // return max_sum;
+    println!("result = {}", result);
+    return result;
 }
 
-// fn compute_day_1_part_2() -> u64 {
-//     let mut top_three: [u64; 3] = [0,0,0]; //max on left, min on right
-//     let mut max_sum: u64 = 0;
-//     let mut curr_sum: u64 = 0;
-//     for idx in 0..INPUT.len() {
-//         if INPUT[idx].len() == 0
-//         {
-//             max_sum = cmp::max(curr_sum, max_sum);
-//             add_to_top_three(curr_sum,&mut top_three);
-//             curr_sum = 0;
-//         }
-//         else
-//         {
-//             curr_sum += INPUT[idx].parse::<u64>().unwrap();
-//         }
-//     }
-//     return max_sum;
-// }
+pub fn compute_day_1_part_2() -> u64 {
+    let mut str2num: HashMap<&str, u64> = HashMap::new();
+    str2num.insert("one", 1);
+    str2num.insert("two", 2);
+    str2num.insert("three", 3);
+    str2num.insert("four", 4);
+    str2num.insert("five", 5);
+    str2num.insert("six", 6);
+    str2num.insert("seven", 7);
+    str2num.insert("eight", 8);
+    str2num.insert("nine", 9);
+    str2num.insert("1", 1);
+    str2num.insert("2", 2);
+    str2num.insert("3", 3);
+    str2num.insert("4", 4);
+    str2num.insert("5", 5);
+    str2num.insert("6", 6);
+    str2num.insert("7", 7);
+    str2num.insert("8", 8);
+    str2num.insert("9", 9);
 
-// fn add_to_top_three(new: u64, top_three: &mut [u64;3])
-// {
-//     for idx in 0..3
-//     {
-//         if new > top_three[idx]
-//         {
-//             for in_idx in 2..idx
-//             {
-//                 top_three[in_idx + 1] = top_three[in_idx];
-//             }
-//             top_three[idx] = new;
-//             println!("new top tree is [{},{},{}]", top_three[0],top_three[1],top_three[2]);
-//             break;
-//         }
-//     }
-// }
+    // let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_in.txt";
+    let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_test2.txt";
+    let mut result: u64 = 0;
+    for line in read_to_string(input_path).unwrap().lines() {
+
+        let re = Regex::new(r"(\d|one|two|three|four|five|six|seven|eight|nine)").unwrap();
+        println!("{}", line.to_string());
+        // for cap in re.find_iter(line) { println!("  {}",cap.as_str())};
+        println!("{}", str2num.get(re.find_iter(line).next().unwrap().as_str()).unwrap()*10 + str2num.get(re.find_iter(line).last().unwrap().as_str()).unwrap());
+        result += str2num.get(re.find_iter(line).next().unwrap().as_str()).unwrap()*10 + str2num.get(re.find_iter(line).last().unwrap().as_str()).unwrap();
+    }
+    println!("result = {}", result); // 55061 is too low
+    return result;
+}
