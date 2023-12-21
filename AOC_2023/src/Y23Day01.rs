@@ -5,26 +5,17 @@ use std::cmp;
 use regex::Regex;
 use std::collections::HashMap;
 
-
-
-// fn computeFuelReq(mass: f64) -> u64 {
-//     let mut fuelReq: u64;
-//     fuelReq = ((mass/3.0).floor() - 2.0) as u64;
-//     return fuelReq
-// }
-
 pub fn compute_day_1_part_1() -> u64 {
-    let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_in.txt";
-    // let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_test1.txt";
+    let input_path = ".\\input\\Y23Day01_in.txt";
+    // let input_path = ".\\input\\Y23Day01_test1.txt";
     let mut result: u64 = 0;
     for line in read_to_string(input_path).unwrap().lines() {
 
         let re = Regex::new(r"(\d|one|two|three|four|five|six|seven|eight|nine)").unwrap();
         let my_caps: Vec<u64> = re.find_iter(line).filter_map(|cap| cap.as_str().parse().ok()).collect();  //https://stackoverflow.com/questions/58010114/capture-all-regex-matches-into-a-vector
         result += my_caps.first().unwrap()*10 + my_caps.last().unwrap();
-        // println!("{} with {:?} => {} {} => {}", line.to_string(), my_caps, my_caps.first().unwrap(), my_caps.last().unwrap(), my_caps.first().unwrap()*10 + my_caps.last().unwrap());
     }
-    println!("result = {}", result);
+    println!("result = {}", result); //=> 55002 is good
     return result;
 }
 
@@ -49,24 +40,24 @@ pub fn compute_day_1_part_2() -> u64 {
     str2num.insert("8", 8);
     str2num.insert("9", 9);
 
-    // let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_in.txt";
-    let input_path = "C:\\Users\\Valentin\\Medoc\\workspace\\AdventOfCode\\AOC_2023\\input\\Y23Day01_test2.txt";
+    let input_path = ".\\input\\Y23Day01_in.txt";
+    // let input_path = ".\\input\\Y23Day01_test2.txt";
     let mut result: u64 = 0;
     for line in read_to_string(input_path).unwrap().lines() {
-        let mut line_match: Vec<u64> = vec![];
+        let mut line_match: HashMap<usize, u64> = HashMap::new();
         for re_str in vec![r"\d", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
         {
-            line_match.append(&mut get_regex_res(re_str, line));            
+            line_match.extend(get_regex_res(re_str, line));
         }
-        println!("{}", line.to_string());
-        // for cap in re.find_iter(line) { println!("  {}",cap.as_str())};
-        println!("{:?}", line_match);
+        let line_add: u64 = line_match.get(line_match.keys().max().unwrap()).unwrap() + line_match.get(line_match.keys().min().unwrap()).unwrap()*10;
+        result += line_add;
+        // println!("{}; match are {:?}; line_add is {}", line.to_string(), line_match, line_add);
     }
-    println!("result = {}", result); // 55061 is too low
+    println!("result = {}", result); // 55061 is too low; 55093 is good !
     return result;
 }
 
-pub fn get_regex_res(re_str: &str, line: &str) -> Vec<u64> {
+pub fn get_regex_res(re_str: &str, line: &str) -> HashMap<usize, u64> {
     let mut str2num: HashMap<&str, u64> = HashMap::new();
     str2num.insert("one", 1);
     str2num.insert("two", 2);
@@ -87,9 +78,8 @@ pub fn get_regex_res(re_str: &str, line: &str) -> Vec<u64> {
     str2num.insert("8", 8);
     str2num.insert("9", 9);
 
-    let mut result: Vec<u64> = vec![];
+    let mut result: HashMap<usize, u64> = HashMap::new();
     let re = Regex::new(re_str).unwrap();
-    // for cap in re.find_iter(line) { println!("  {}",cap.as_str())};
-    re.find_iter(line).for_each(|cap| result.push(*str2num.get(cap.as_str()).unwrap()));    
+    re.find_iter(line).for_each(|cap| {result.insert(cap.start(),*str2num.get(cap.as_str()).unwrap());});
     return result;
 }
