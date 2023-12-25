@@ -5,9 +5,9 @@ use std::cmp;
 use regex::Regex;
 use std::collections::HashMap;
 
-pub fn compute_day_1_part_1() -> u64 {
-    let input_path = ".\\input\\Y23Day01_in.txt";
-    // let input_path = ".\\input\\Y23Day01_test1.txt";
+pub fn compute_part_1() -> u64 {
+    let input_path = ".\\input\\y23_d01_in.txt";
+    // let input_path = ".\\input\\y23_d01_test1.txt";
     let mut result: u64 = 0;
     for line in read_to_string(input_path).unwrap().lines() {
 
@@ -19,7 +19,7 @@ pub fn compute_day_1_part_1() -> u64 {
     return result;
 }
 
-pub fn compute_day_1_part_2() -> u64 {
+pub fn compute_part_2() -> u64 {
     let mut str2num: HashMap<&str, u64> = HashMap::new();
     str2num.insert("one", 1);
     str2num.insert("two", 2);
@@ -40,8 +40,8 @@ pub fn compute_day_1_part_2() -> u64 {
     str2num.insert("8", 8);
     str2num.insert("9", 9);
 
-    let input_path = ".\\input\\Y23Day01_in.txt";
-    // let input_path = ".\\input\\Y23Day01_test2.txt";
+    let input_path = ".\\input\\y23_d01_in.txt";
+    // let input_path = ".\\input\\y23_d01_test2.txt";
     let mut result: u64 = 0;
     for line in read_to_string(input_path).unwrap().lines() {
         let mut line_match: HashMap<usize, u64> = HashMap::new();
