@@ -9,7 +9,7 @@ pub fn compute_part_1() -> u64 {
     let input_path: &str = ".\\input\\y23_d03_in.txt";
     // let input_path: &str = ".\\input\\y23_d03_test1.txt";
 
-    let mut table: Vec<Vec<char>> = input_as_table(input_path);
+    let table: Vec<Vec<char>> = input_as_table(input_path);
 
     for (row,line) in table.iter().enumerate() {
         let mut current_number: u64 = 0;
@@ -25,8 +25,8 @@ pub fn compute_part_1() -> u64 {
                 }
             }
             else {
-                if is_number {
-                    // println!("c {current_number}; valid {is_valid_number}")
+                if is_number && !is_valid_number {
+                    // println!("c {current_number}; valid {is_valid_number}");
                 }
                 if is_valid_number {
                     res = res + current_number;
@@ -36,9 +36,12 @@ pub fn compute_part_1() -> u64 {
                 is_valid_number = false;
             }
         }
+        if is_valid_number {
+            res = res + current_number;
+        }
     }
     
-    return res; // is too low 536993
+    return res; // res is 539590
 }
 
 pub fn compute_part_2() -> u64 {
