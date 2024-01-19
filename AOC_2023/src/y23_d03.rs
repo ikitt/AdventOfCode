@@ -21,7 +21,7 @@ impl Star {
     }
 
     // An instance method
-    fn add_neighbor(&self, neighbor: u64) {
+    fn add_neighbor(&mut self, neighbor: u64) {
         self.neighbors.push(neighbor);
     }
 }
@@ -29,7 +29,7 @@ impl Star {
 pub fn compute_part_1() -> u64 {
     let mut res:u64 = 0;
     let input_path: &str = ".\\input\\y23_d03_in.txt";
-    // let input_path: &str = ".\\input\\y23_d03_test1.txt";
+    // let input_path: &str = ".\\input\\y23_d03_test1.txt"; // give 539590
 
     let table: Vec<Vec<char>> = input_as_table(input_path);
 
@@ -78,35 +78,43 @@ pub fn compute_part_2() -> u64 {
      */
 
     let mut res:u64 = 0;
-    let input_path: &str = ".\\input\\y23_d03_in.txt";
-    // let input_path: &str = ".\\input\\y23_d03_test1.txt";
+    // let input_path: &str = ".\\input\\y23_d03_in.txt"; // 81285307 is too high
+    let input_path: &str = ".\\input\\y23_d03_test1.txt"; // give 467835
 
     let table: Vec<Vec<char>> = input_as_table(input_path);
-    let mut star_list: Vec<Star> = vec![];
+    let mut star_map: HashMap<[usize; 2], Star> = HashMap::new();
 
+    let mut star_pos_list: Vec<[usize;2]> = vec![];
     for (row,line) in table.iter().enumerate() {
         let mut current_number: u64 = 0;
         let mut is_number: bool = false;
-        let mut star_pos_list: Vec<[usize;2]> = vec![];
         for (col,ch) in line.iter().enumerate() {
             if table[row][col].is_digit(10) {
                 is_number = true;
-                add_stars(row, col, &table, &star_pos_list)
+                current_number = current_number*10 + u64::from(table[row][col].to_digit(10).unwrap());                
+
+                add_stars(row, col, &table, &mut star_pos_list)
             }
             else {
-                if is_number {
-                    for star_pos in star_pos_list{
-                        if()
-                    }
-                    res = res + current_number;
+                if is_number { // End of a number
+                    star_pos_list.sort();
+                    star_pos_list.dedup();
+                    println!("Read number {} which has {} stars as neighbors.", current_number, star_pos_list.len());
+                    star_pos_list.clone().into_iter().for_each(|star_pos: [usize; 2]| {
+                        create_or_push_star(&star_pos, current_number, &mut star_map);
+                    });
+                    star_pos_list.clear();
                 }
                 is_number = false;
                 current_number = 0;
-                is_valid_number = false;
             }
         }
-        if is_valid_number {
-            res = res + current_number;
+    }
+
+    for (pos, star) in star_map.iter(){
+        println!("Star at pos {:?}, has neighbor {:?} ", pos, star.neighbors);
+        if (star.neighbors.len() == 2){
+            res = res + (star.neighbors[0] * star.neighbors[1]);
         }
     }
     return res;
@@ -175,7 +183,7 @@ pub fn has_symbol_neighbor(row:usize, col:usize, table: &Vec<Vec<char>>) -> bool
 }
 
 
-pub fn add_stars(row:usize, col:usize, table: &Vec<Vec<char>>, star_pos_list: &Vec<[usize; 2]>) {
+pub fn add_stars(row:usize, col:usize, table: &Vec<Vec<char>>, star_pos_list: &mut Vec<[usize; 2]>) {
     let max_row = table.len()-1;
     let max_col = table[0].len()-1;
 
@@ -229,4 +237,12 @@ pub fn is_symbor(ch: char) -> bool {
 
 pub fn is_star(ch: char) -> bool {
     return ch == '*';
+}
+
+pub fn create_or_push_star(star_pos: &[usize; 2], current_number: u64, star_map: &mut HashMap<[usize;2], Star>){
+    if !star_map.contains_key(star_pos)
+    {
+        star_map.insert(star_pos.clone(), Star::new(star_pos[0].clone(), star_pos[1].clone()));
+    }
+    star_map.get_mut(star_pos).unwrap().neighbors.push(current_number.clone());
 }
