@@ -1,6 +1,5 @@
 // ikitt for Advent of Code 2023
 
-use regex::{Regex, Split};
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fs::read_to_string;
@@ -103,8 +102,7 @@ pub fn compute_part_2() -> u64 {
      */
 
     let mut res: u64 = 0;
-    let input_path: &str = "./input/y23_d03_in.txt"; // 81285307 is too high; random 75285307 is to low
-                                                     // 81665304
+    let input_path: &str = "./input/y23_d03_in.txt"; // 80703636 is the result.
 
     // let input_path: &str = "./input/y23_d03_test1.txt"; // give 467835
 
@@ -122,24 +120,27 @@ pub fn compute_part_2() -> u64 {
                 current_number =
                     current_number * 10 + u64::from(table[row][col].to_digit(10).unwrap());
 
-                add_stars(row, col, &table, &mut star_pos_list)
+                add__stars_pos_to_list(row, col, &table, &mut star_pos_list);
+                if col == line.len() - 1 {
+                    // End of line
+                    store_number_in_star(
+                        row,
+                        col,
+                        current_number,
+                        &mut star_pos_list,
+                        &mut star_map,
+                    );
+                }
             } else {
                 if is_number {
                     // End of a number
-                    star_pos_list.sort();
-                    star_pos_list.dedup();
-                    println!(
-                        "Read number {} which has {} stars as neighbors.",
+                    store_number_in_star(
+                        row,
+                        col,
                         current_number,
-                        star_pos_list.len()
+                        &mut star_pos_list,
+                        &mut star_map,
                     );
-                    star_pos_list
-                        .clone()
-                        .into_iter()
-                        .for_each(|star_pos: (usize, usize)| {
-                            create_or_push_star(&star_pos, current_number, &mut star_map);
-                        });
-                    star_pos_list.clear();
                 }
                 is_number = false;
                 current_number = 0;
@@ -173,12 +174,39 @@ pub fn compute_part_2() -> u64 {
         }
     }
 
-    print_gear(&stars_vec);
+    // print_gear(&stars_vec);
 
     res
 }
 
-pub fn input_as_table(input_pth: &str) -> Vec<Vec<char>> {
+fn store_number_in_star(
+    row: usize,
+    col: usize,
+    current_number: u64,
+    star_pos_list: &mut Vec<(usize, usize)>,
+    mut star_map: &mut HashMap<(usize, usize), Star>,
+) {
+    star_pos_list.sort();
+    star_pos_list.dedup();
+
+    println!(
+        "Read number {} at ({},{}) which has {} stars as neighbors.",
+        current_number,
+        row,
+        col,
+        star_pos_list.len()
+    );
+
+    star_pos_list
+        .clone()
+        .into_iter()
+        .for_each(|star_pos: (usize, usize)| {
+            create_or_push_star(&star_pos, current_number, &mut star_map);
+        });
+    star_pos_list.clear();
+}
+
+fn input_as_table(input_pth: &str) -> Vec<Vec<char>> {
     let mut table: Vec<Vec<char>> = vec![];
     for line in read_to_string(input_pth).unwrap().lines() {
         let mut table_line: Vec<char> = vec![];
@@ -193,7 +221,7 @@ pub fn input_as_table(input_pth: &str) -> Vec<Vec<char>> {
     return table;
 }
 
-pub fn has_symbol_neighbor(row: usize, col: usize, table: &Vec<Vec<char>>) -> bool {
+fn has_symbol_neighbor(row: usize, col: usize, table: &Vec<Vec<char>>) -> bool {
     let max_row = table.len() - 1;
     let max_col = table[0].len() - 1;
 
@@ -225,7 +253,7 @@ pub fn has_symbol_neighbor(row: usize, col: usize, table: &Vec<Vec<char>>) -> bo
     false
 }
 
-pub fn add_stars(
+fn add__stars_pos_to_list(
     row: usize,
     col: usize,
     table: &Vec<Vec<char>>,
@@ -262,13 +290,14 @@ pub fn add_stars(
     }
 }
 
-pub fn is_symbor(ch: char) -> bool {
+fn is_symbor(ch: char) -> bool {
     let is_dig: bool = ch.is_digit(10);
     let is_point: bool = ch == '.';
     return !(is_dig || is_point);
 }
 
-pub fn is_star(table: &Vec<Vec<char>>, row_i32: i32, col_i32: i32) -> bool {
+/// Check if there is a star at (rox_i32, col_i32) in table
+fn is_star(table: &Vec<Vec<char>>, row_i32: i32, col_i32: i32) -> bool {
     if row_i32 >= table.len() as i32
         || col_i32 >= table[0].len() as i32
         || row_i32 < 0
@@ -283,7 +312,8 @@ pub fn is_star(table: &Vec<Vec<char>>, row_i32: i32, col_i32: i32) -> bool {
     table[row_i32 as usize][col_i32 as usize] == '*'
 }
 
-pub fn create_or_push_star(
+/// Create a new star if wasn't one at star_pos, and push the current number to the star
+fn create_or_push_star(
     star_pos: &(usize, usize),
     current_number: u64,
     star_map: &mut HashMap<(usize, usize), Star>,
@@ -301,6 +331,7 @@ pub fn create_or_push_star(
         .push(current_number.clone());
 }
 
+/// Print 'v' for gear and 'x' for other star, other symbol printed as ' '
 fn print_gear(star_Vec: &Vec<Star>) {
     let mut current_row = 0;
     let mut current_col = 0;

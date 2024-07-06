@@ -10,4 +10,6 @@ fn main() {
     // println!("Day2Part2 {}", y23_d02::compute_part_2());
     // println!("Day3Part1 {}", y23_d03::compute_part_1());
     println!("Day3Part2 {}", y23_d03::compute_part_2());
+    println!("Day4Part1 {}", y23_d04::compute_part_1());
+    println!("Day4Part2 {}", y23_d04::compute_part_2());
 }
