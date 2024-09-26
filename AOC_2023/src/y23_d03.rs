@@ -161,16 +161,16 @@ pub fn compute_part_2() -> u64 {
     println!("Second star count is {}", stars_vec.len());
 
     for star in stars_vec.iter() {
-        print!(
-            "Star at pos {:?}, has neighbor {:?} ",
-            (star.row, star.col),
-            star.neighbors
-        );
+        // print!(
+        //     "Star at pos {:?}, has neighbor {:?} ",
+        //     (star.row, star.col),
+        //     star.neighbors
+        // );
         if star.neighbors.len() == 2 {
             res += star.neighbors[0] * star.neighbors[1];
-            println!(" v => {res}");
+            // println!(" v => {res}");
         } else {
-            println!(" x");
+            // println!(" x");
         }
     }
 
