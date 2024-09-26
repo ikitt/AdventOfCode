@@ -1,6 +1,7 @@
 mod y23_d01;
 mod y23_d02;
 mod y23_d03;
+mod y23_d04;
 
 fn main() {
     println!("Hello, Christams dady!");
