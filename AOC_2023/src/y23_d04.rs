@@ -1,5 +1,6 @@
 // ikitt for Advent of Code 2023
 
+use crate::helper::int_str_to_int;
 use core::num::ParseIntError;
 use std::{fs::read_to_string, vec};
 
@@ -56,14 +57,14 @@ pub fn compute_part_2() -> u64 {
     res
 }
 
-pub fn int_str_to_int(int_str: String) -> Vec<u8> {
-    let int_str_trime: String = int_str.trim().to_string();
-    println!("Will split and map '{}'", int_str_trime);
-    int_str_trime
-        .split_whitespace()
-        .map(|one_int_str| one_int_str.parse::<u8>().unwrap())
-        .collect::<Vec<u8>>() //).collect::<Vec<&str>>()[1].to_string();
-}
+// pub fn int_str_to_int(int_str: String) -> Vec<u8> {
+//     let int_str_trime: String = int_str.trim().to_string();
+//     println!("Will split and map '{}'", int_str_trime);
+//     int_str_trime
+//         .split_whitespace()
+//         .map(|one_int_str| one_int_str.parse::<u8>().unwrap())
+//         .collect::<Vec<u8>>() //).collect::<Vec<&str>>()[1].to_string();
+// }
 
 pub fn read_input() -> Vec<(Vec<u8>, Vec<u8>)> {
     let input_path = "./input/y23_d04_in.txt"; // => 21959 for part 1 and ???? for part 2
