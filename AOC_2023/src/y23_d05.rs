@@ -6,34 +6,122 @@ use std::collections::HashMap;
 use std::{fs::read_to_string, vec};
 
 pub fn compute_part_1() -> u64 {
-    let (mut seed, list_of_converting_map) = read_input();
-    for conversion_map in list_of_converting_map {
-        let mut new_seed: Vec<u64> = Vec::new();
-        for one_of_seed in seed.clone() {
-            if let Some(new_value) = conversion_map.get(&one_of_seed) {
-                println!("Converting {} to {}", one_of_seed, new_value);
-                new_seed.push(*new_value);
-            } else {
-                println!("Keeping {}", one_of_seed);
-                new_seed.push(one_of_seed);
+    let (mut seed, list_of_converting_list) = read_input();
+    for conversion_list in list_of_converting_list {
+        let mut new_seed: Vec<u64> = seed.clone();
+        for (i, one_of_seed) in seed.clone().iter().enumerate() {
+            for conversion_line in conversion_list.clone() {
+                if one_of_seed >= &conversion_line.1
+                    && one_of_seed < &(conversion_line.1 + conversion_line.2)
+                {
+                    // This is a conversion
+                    println!(
+                        "Converting {} to {}",
+                        one_of_seed,
+                        one_of_seed + conversion_line.0 - conversion_line.1
+                    );
+                    new_seed[i] = one_of_seed + conversion_line.0 - conversion_line.1;
+                    break; // No need to check other conversions for this seed
+                }
             }
         }
         println!("Converted seed: {:?} to {:?}", seed, new_seed);
         seed = new_seed;
     }
-    *seed.iter().min().unwrap() as u64
+    *seed.iter().min().unwrap()
 }
 
 pub fn compute_part_2() -> u64 {
-    0
+    let (mut seed, list_of_converting_list) = read_input();
+    let mut paired_seed: Vec<(u64, u64)> = Vec::new();
+    for i in 0..(seed.len() / 2) {
+        paired_seed.push((seed[2 * i], seed[2 * i] + seed[2 * i + 1]));
+    }
+    for converting_list in list_of_converting_list {
+        let mut new_seed_range: Vec<(u64, u64)> = Vec::new(); //paired_seed.clone();
+        for seed_range in paired_seed {
+            for conversion_line in converting_list.clone() {
+                if let Some(intersect_range) = get_intersection(
+                    seed_range,
+                    (conversion_line.1, conversion_line.1 + conversion_line.2),
+                ) {
+                    let updated_range = (
+                        intersect_range.0 + conversion_line.0 - conversion_line.1,
+                        intersect_range.1 + conversion_line.0 - conversion_line.1,
+                    );
+                    new_seed_range.push(updated_range);
+                    let (remain_before_opt, remain_after_opt) =
+                        get_range_difference(seed_range, intersect_range);
+                    if let Some(remain_before) = remain_before_opt {
+                        paired_seed.push(remain_before);
+                    }
+                    if let Some(remain_after) = remain_after_opt {
+                        paired_seed.push(remain_after);
+                    }
+                } else {
+                    new_seed_range.push(seed_range);
+                }
+            }
+            //     // This is a conversion
+            //     let (low_range, up_range) = get_range_difference(
+            //         (seed_range.0, seed_range.1),
+            //         (converting_list[0].1, converting_list[0].1 + converting_list[0].2),
+            //     );
+            //     if let Some(low) = low_range {
+            //         paired_seed.push(low);
+            //     }
+            //     if let Some(up) = up_range {
+            //         paired_seed.push(up);
+            //     }
+            // } else {
+            //     // No conversion
+            //     paired_seed.push(seed_range);
+            // }
+
+            // paired_seed.append(remain);
+        }
+        paired_seed = new_seed_range;
+    }
+    // if let Some()
+    *paired_seed.iter().map(|(start, end)| start).min().unwrap()
+}
+
+fn get_intersection(range1: (u64, u64), range2: (u64, u64)) -> Option<(u64, u64)> {
+    let start = range1.0.max(range2.0);
+    let end = range1.1.min(range2.1);
+    if start < end {
+        Some((start, end))
+    } else {
+        None
+    }
+}
+
+fn get_range_difference(
+    range_base: (u64, u64),
+    range_substractor: (u64, u64),
+) -> (Option<(u64, u64)>, Option<(u64, u64)>) {
+    if let Some(intersection) = get_intersection(range_base, range_substractor) {
+        let mut low_range: Option<(u64, u64)> = None;
+        let mut up_range: Option<(u64, u64)> = None;
+        if range_base.0 < intersection.0 {
+            low_range = Some((range_base.0, intersection.0));
+        }
+        if intersection.1 < range_base.1 {
+            up_range = Some((intersection.1, range_base.1));
+        }
+        (low_range, up_range)
+    } else {
+        // If there is no intersection, the whole ranges are part of the symmetric difference
+        (Some(range_base), None)
+    }
 }
 
 // Input format: <destination range start>  <the source range start> <range length>
 //      Not in range mean no change
 //Vec<(Vec<u64>, Vec<u64>)>
-pub fn read_input() -> (Vec<u64>, Vec<HashMap<u64, u64>>) {
-    let input_path = "./input/y23_d05_in.txt"; // => xxx for part 1 and ???? for part 2
-                                               // let input_path = "./input/y23_d05_test1.txt"; // Expect 35 for part 1 and xx for part 2
+pub fn read_input() -> (Vec<u64>, Vec<Vec<(u64, u64, u64)>>) {
+    // let input_path = "./input/y23_d05_in.txt"; // => 107430936 for part 1 and ???? for part 2
+    let input_path = "./input/y23_d05_test1.txt"; // Expect 35 for part 1 and 46 for part 2
     let full_input = read_to_string(input_path).unwrap();
     let mut input_lines = full_input.lines();
     let seed = int_str_to_int_t::<u64>(
@@ -46,49 +134,28 @@ pub fn read_input() -> (Vec<u64>, Vec<HashMap<u64, u64>>) {
     );
 
     // Each HashMap if for one block of input, defining evry conversion present in the input
-    let mut list_of_converting_map: Vec<HashMap<u64, u64>> = Vec::new();
+    let mut list_of_converting_list: Vec<Vec<(u64, u64, u64)>> = Vec::new();
 
-    let mut current_map: HashMap<u64, u64> = HashMap::new();
+    let mut current_list: Vec<(u64, u64, u64)> = Vec::new();
     for line in input_lines {
         if line.is_empty() {
             // Finish previous block
-            if !current_map.is_empty() {
-                list_of_converting_map.push(current_map);
+            if !current_list.is_empty() {
+                list_of_converting_list.push(current_list);
             }
-            current_map = HashMap::new();
+            current_list = Vec::new();
             continue;
         } else if line.starts_with(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) {
             // This is a new block
             let numbers: Vec<u64> = int_str_to_int_t::<u64>(line.to_string());
+            current_list.push((numbers[0], numbers[1], numbers[2]))
             // println!("Create range from : {:?}", numbers);
-            for i in 0..numbers[2] {
-                // println!(
-                //     "  Will insert {} + {} : {} + {}",
-                //     numbers[1], i, numbers[0], i,
-                // );
-                current_map.insert(numbers[1] + i, numbers[0] + i);
-            }
         } else {
             //println!("Ignoring line: {}", line);
             continue;
         }
     }
-    list_of_converting_map.push(current_map);
-    // println!("list_of_converting_map is: {:?}", list_of_converting_map);
+    list_of_converting_list.push(current_list);
 
-    // for line in read_to_string(input_path).unwrap().lines() {
-    //     println!("line input is {}", line);
-    //     let mut numbers: String = line.split(':').collect::<Vec<&str>>()[1].to_string();
-    //     let mut winning_numbers: Vec<u64> =
-    //         int_str_to_int(numbers.split('|').collect::<Vec<&str>>()[0].to_string());
-    //     let mut youhave_numbers: Vec<u64> =
-    //         int_str_to_int(numbers.split('|').collect::<Vec<&str>>()[1].to_string());
-    //     println!(
-    //         "The winning numbers are {:#?}, and number you have are {:#?}",
-    //         winning_numbers, youhave_numbers
-    //     );
-    //     result.push((winning_numbers, youhave_numbers));
-    // }
-    // result
-    (seed, list_of_converting_map)
+    (seed, list_of_converting_list)
 }
