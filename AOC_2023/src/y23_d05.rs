@@ -39,28 +39,37 @@ pub fn compute_part_2() -> u64 {
     }
     for converting_list in list_of_converting_list {
         let mut new_seed_range: Vec<(u64, u64)> = Vec::new(); //paired_seed.clone();
-        for seed_range in paired_seed {
+        for seed_range in paired_seed.clone() {
+            let mut seed_has_intersection: bool = false;
             for conversion_line in converting_list.clone() {
                 if let Some(intersect_range) = get_intersection(
                     seed_range,
                     (conversion_line.1, conversion_line.1 + conversion_line.2),
                 ) {
+                    seed_has_intersection = true;
                     let updated_range = (
                         intersect_range.0 + conversion_line.0 - conversion_line.1,
                         intersect_range.1 + conversion_line.0 - conversion_line.1,
                     );
+                    // println!(
+                    //     "Converting range {:?} to {:?} using conversion {:?}",
+                    //     seed_range, updated_range, conversion_line
+                    // );
                     new_seed_range.push(updated_range);
                     let (remain_before_opt, remain_after_opt) =
                         get_range_difference(seed_range, intersect_range);
                     if let Some(remain_before) = remain_before_opt {
-                        paired_seed.push(remain_before);
+                        // println!("Remaining before {:?} is {:?}", seed_range, remain_before);
+                        new_seed_range.push(remain_before);
                     }
                     if let Some(remain_after) = remain_after_opt {
-                        paired_seed.push(remain_after);
+                        // println!("Remaining after {:?} is {:?}", seed_range, remain_after);
+                        new_seed_range.push(remain_after);
                     }
-                } else {
-                    new_seed_range.push(seed_range);
                 }
+            }
+            if !seed_has_intersection {
+                new_seed_range.push(seed_range);
             }
             //     // This is a conversion
             //     let (low_range, up_range) = get_range_difference(
@@ -83,6 +92,7 @@ pub fn compute_part_2() -> u64 {
         paired_seed = new_seed_range;
     }
     // if let Some()
+    // println!("Final paired seed: {:?}", paired_seed);
     *paired_seed.iter().map(|(start, end)| start).min().unwrap()
 }
 
@@ -120,8 +130,8 @@ fn get_range_difference(
 //      Not in range mean no change
 //Vec<(Vec<u64>, Vec<u64>)>
 pub fn read_input() -> (Vec<u64>, Vec<Vec<(u64, u64, u64)>>) {
-    // let input_path = "./input/y23_d05_in.txt"; // => 107430936 for part 1 and ???? for part 2
-    let input_path = "./input/y23_d05_test1.txt"; // Expect 35 for part 1 and 46 for part 2
+    let input_path = "./input/y23_d05_in.txt"; // => 107430936 for part 1 and ???? for part 2 (not 0)
+                                               // let input_path = "./input/y23_d05_test1.txt"; // Expect 35 for part 1 and 46 for part 2
     let full_input = read_to_string(input_path).unwrap();
     let mut input_lines = full_input.lines();
     let seed = int_str_to_int_t::<u64>(
