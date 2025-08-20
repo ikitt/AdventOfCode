@@ -54,15 +54,15 @@ pub fn compute_part_2() -> u64 {
                             intersect_range.0 + conversion_line.0 - conversion_line.1,
                             intersect_range.1 + conversion_line.0 - conversion_line.1,
                         );
-                        println!(
-                            "   Intersection bewteen [{:?},{:?}] and [{:?},{:?}] give [{:?},{:?}]",
-                            seed_range.0,
-                            seed_range.1,
-                            conversion_line.1,
-                            conversion_line.1 + conversion_line.2 - 1,
-                            updated_range.0,
-                            updated_range.1
-                        );
+                        // println!(
+                        //     "   Intersection bewteen [{:?},{:?}] and [{:?},{:?}] give [{:?},{:?}]",
+                        //     seed_range.0,
+                        //     seed_range.1,
+                        //     conversion_line.1,
+                        //     conversion_line.1 + conversion_line.2 - 1,
+                        //     updated_range.0,
+                        //     updated_range.1
+                        // );
                         // println!(
                         //     "Converting range {:?} to {:?} using conversion {:?}",
                         //     seed_range, updated_range, conversion_line
@@ -89,31 +89,31 @@ pub fn compute_part_2() -> u64 {
             }
             paired_seed = tmp_remain_list
         }
-        println!("Before shrinkage New paired seed: {:?}", new_seed_range);
+        // println!("Before shrinkage New paired seed: {:?}", new_seed_range);
         new_seed_range.sort_by(|a, b| a.0.cmp(&b.0));
         let mut shrinked_new_seed_range: Vec<(u64, u64)> = Vec::new();
         for seed_range in new_seed_range {
             if let Some(last) = shrinked_new_seed_range.last_mut() {
                 if last.1 >= seed_range.0 {
                     // Merge ranges
-                    println!(
-                        "      Merging ranges {:?} and {:?} into {:?}",
-                        *last,
-                        seed_range,
-                        (last.0, last.1.max(seed_range.1))
-                    );
+                    // println!(
+                    //     "      Merging ranges {:?} and {:?} into {:?}",
+                    //     *last,
+                    //     seed_range,
+                    //     (last.0, last.1.max(seed_range.1))
+                    // );
                     last.1 = last.1.max(seed_range.1);
                 } else {
-                    println!("      Unchanged range: {:?}", seed_range);
+                    // println!("      Unchanged range: {:?}", seed_range);
                     shrinked_new_seed_range.push(seed_range);
                 }
             } else {
-                println!("      Unchanged range: {:?}", seed_range);
+                // println!("      Unchanged range: {:?}", seed_range);
                 shrinked_new_seed_range.push(seed_range);
             }
         }
         paired_seed = shrinked_new_seed_range;
-        println!("New paired seed: {:?}", paired_seed);
+        // println!("New paired seed: {:?}", paired_seed);
     }
     // if let Some()
     // println!("Final paired seed: {:?}", paired_seed);
